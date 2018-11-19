@@ -1,102 +1,78 @@
-.lds-roller {
-    display: inline-block;
-    position: relative;
-    width: 64px;
-    height: 64px;
-    top: calc(50% - 32px); /* 32 = 64/2 */
-  }
-  .lds-roller div {
-    animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    transform-origin: 32px 32px;
-  }
-  .lds-roller div:after {
-    content: " ";
-    display: block;
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #fff;
-    margin: -3px 0 0 -3px;
-  }
-  .lds-roller div:nth-child(1) {
-    animation-delay: -0.036s;
-  }
-  .lds-roller div:nth-child(1):after {
-    top: 50px;
-    left: 50px;
-  }
-  .lds-roller div:nth-child(2) {
-    animation-delay: -0.072s;
-  }
-  .lds-roller div:nth-child(2):after {
-    top: 54px;
-    left: 45px;
-  }
-  .lds-roller div:nth-child(3) {
-    animation-delay: -0.108s;
-  }
-  .lds-roller div:nth-child(3):after {
-    top: 57px;
-    left: 39px;
-  }
-  .lds-roller div:nth-child(4) {
-    animation-delay: -0.144s;
-  }
-  .lds-roller div:nth-child(4):after {
-    top: 58px;
-    left: 32px;
-  }
-  .lds-roller div:nth-child(5) {
-    animation-delay: -0.18s;
-  }
-  .lds-roller div:nth-child(5):after {
-    top: 57px;
-    left: 25px;
-  }
-  .lds-roller div:nth-child(6) {
-    animation-delay: -0.216s;
-  }
-  .lds-roller div:nth-child(6):after {
-    top: 54px;
-    left: 19px;
-  }
-  .lds-roller div:nth-child(7) {
-    animation-delay: -0.252s;
-  }
-  .lds-roller div:nth-child(7):after {
-    top: 50px;
-    left: 14px;
-  }
-  .lds-roller div:nth-child(8) {
-    animation-delay: -0.288s;
-  }
-  .lds-roller div:nth-child(8):after {
-    top: 45px;
-    left: 10px;
-  }
-  @keyframes lds-roller {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-  
-  .lds-roller-wrapper {
-      background: #00000038;
-      text-align: center;
-      width: 100%;
-      height: 100%;
-      position: fixed;
-      top: 0;
-      z-index: 1000;
-  }
-.display-none {
-    display: none;
+function loadSong(elem) {
+    showLoading();
+
+    var file = elem.files[0];
+    var url = file.urn ||file.name;
+    loadUrl(url, null, FileAPIReader(file));
+    console.log("below loadUrl method");
+
+    var audio = document.createElement("audio");
+    audio.setAttribute("controls", "");
+    audio.setAttribute("style", "margin: 10px 0;");
+    
+    var source = document.createElement("source");
+    source.src = URL.createObjectURL(elem.files[0]);
+
+    audio.appendChild(source);
+
+    // not really needed in this exact case, but since it is really important in other cases,
+    // don't forget to revoke the blobURI when you don't need it
+    // audio.onend = function(e) {
+    //     URL.revokeObjectURL(elem.src);
+    // }
+    
+    myAudio = audio;
+    audio_wrapper.innerHTML = "";
+    audio_wrapper.appendChild(audio);
+
+    var note = document.createElement("div");
+    note.innerHTML = "Note: Please do not pause the audio during making lyric!";
+    note.setAttribute("style", "color: #2196F3;margin-bottom: 10px;");
+    audio_wrapper.appendChild(note);
+    
+    btn_play.disabled = false;
+    
+    hideLoading();
 }
-body {
-	margin: 0;
-	padding: 0;
+
+function loadUrl(url, callback, reader) {
+    var $ = function(e){return document.getElementById(e);};
+
+    var startDate = new Date().getTime();
+    ID3.loadTags(url, function() {
+        var endDate = new Date().getTime();
+        // if (typeof console !== "undefined") console.log("Time: " + ((endDate-startDate)/1000)+"s");
+        var tags = ID3.getAllTags(url);
+        
+        // $("artist").textContent = tags.artist || "";
+        // $("title").textContent = tags.title || "";
+        // $("album").textContent = tags.album || "";
+        // $("artist").textContent = tags.artist || "";
+        // $("year").textContent = tags.year || "";
+        // $("comment").textContent = (tags.comment||{}).text || "";
+        // $("genre").textContent = tags.genre || "";
+        // $("track").textContent = tags.track || "";
+        // $("lyrics").textContent = (tags.lyrics||{}).lyrics || "";
+        song_details.innerHTML = tags.artist + " - " + tags.title + " (" + tags.album + ")";
+        artist = tags.artist;
+        title = tags.title;
+
+        if( "picture" in tags ) {
+                var image = tags.picture;
+                var base64String = "";
+                for (var i = 0; i < image.data.length; i++) {
+                    base64String += String.fromCharCode(image.data[i]);
+                }
+            $("art").src = "data:" + image.format + ";base64," + window.btoa(base64String);
+            $("art").style.display = "block";
+        } else {
+            $("art").style.display = "none";
+        }
+
+	    if( callback ) { callback(); };
+    },
+    {tags: ["artist", "title", "album", "year", "comment", "track", "genre", "lyrics", "picture"],
+     dataReader: reader});
+
+    console.log("finish loadUrl()");
 }
