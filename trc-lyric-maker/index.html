@@ -1,17 +1,27 @@
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <style>
 	.body_wrapper {
 		padding: 0 10%;
+		padding-bottom: 30px;
 	}
 	div, span, td, th, dd, dt {
 		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	}
-
+	.display-none {
+		display: none;
+	}
+	body {
+		margin: 0;
+		padding: 0;
+	}
 	#input_lyric {
 		width: 100%;
-		height: 20%;
+		height: 30%;
 		margin: 10px 0;
+		border-radius: 4px;
+		padding: 10px;
 	}
 
 	#div_result {
@@ -23,7 +33,7 @@
 		font-family:   "Segoe UI";
 	}
 	#div_result span {
-		transition: 0.2s;
+		/* transition: 0.2s; */
 	}
 	
 	#div_result:focus {
@@ -38,215 +48,92 @@
 		color: #ff0000;
 		font-weight: bold;
 	}
+	.finish_word {
+		color: #0600ff;
+		font-weight: bold;
+	}
 
-	#myAudio {
-    	display: block;
-		width: 100%;
+	#audio_wrapper audio {
+		width: 80%;
 		margin: 10px 0;
 	}
 
 	#song_details {
 		margin: 10px 0;
 	}
+	
+	.btn {
+		background: #2196f3;
+		padding: 6px;
+		color: #fff;
+		border-radius: 3px;
+		display: inline-block;
+		cursor: pointer;
+		transition: 0.3s;
+		margin-bottom: 10px;
+		border: 0;
+	}
+	.btn:hover {
+		background: #0077d5;
+	}
+	.btn:disabled {
+		background: #d9d9d9;
+		color: #808080;
+		cursor: auto;
+	}
+	.btn:focus {
+		background: #33b002;
+	}
+	/* .btn_download {
+		background: #2196f3;
+		padding: 5px;
+		color: #fff;
+		border-radius: 3px;
+		display: inline-block;
+		cursor: pointer;
+		transition: 0.3s;
+		margin-bottom: 10px;
+	} */
+	.word_time {
+		/* display: none; */
+	}
 </style>
 <title>Trc lyrics makers</title>
 <link rel="stylesheet" href="loading.css" />
 </head>
-<body>
+<body id="my_body">
 	<div class="lds-roller-wrapper display-none"><div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
 	
 	<div class="body_wrapper">
 		<div style="font-size: 24px;color: #2196F3;font-weight: bold;margin: 10px 0;">Trc lyrics makers</div>
-		<div style="font-size: 16px;color: #888888;margin: 10px 0;">Posted on: 19/11/2018. Last modified: 19/11/2018</div>
+		<div style="font-size: 16px;color: #888888;margin: 10px 0;">Posted on: 19/11/2018. Last modified: 7/12/2018</div>
 		<textarea id="input_lyric" placeholder="Paste lyric here..."></textarea><br>
 
 		<div style="margin: 10px 0 5px 0;">Select an audio file to play</div>
-		<input style="margin: 5px 0 10px 0;" type="file" onchange="loadSong(this)" accept="audio/*">
+		<input style="margin: 5px 0 10px 0;" type="file" onchange="loadSong(this, event)" accept="audio/*">
 
 		<div id="song_details"></div>
 		<img style="max-width: 200px;" id="art" src="">
 
 		<div id="audio_wrapper"></div>
 
-		<button onclick="playSong()" id="btn_play" disabled title="Start making lyric">Play</button>
-		<button onclick="nextWord()" id="btn_next" disabled title="Add miliseconds to next word">Next</button>
-		
+		<input type="checkbox" style="margin: 5px 0;" id="cbShowTime">Show time<br>
+		<button class="btn" onclick="playSong()" id="btn_play" disabled title="Start making lyric">Play</button>
+		<button class="btn" onclick="btnNextWord()" id="btn_next" disabled title="Add miliseconds to next word" onkeypress="btnNextKeyPress(event)">Next</button>
+		<button class="btn" onclick="finishWord()" id="btn_finish" disabled title="Add miliseconds to next word">Finish word</button>
+
+		<!-- <button onclick="toggleWordTime(this)" class="btn_toggle_time">Show time</button> -->
 		<!-- 
 			DIV elements can get focus if set the tabindex attribute:
 			https://stackoverflow.com/questions/7876283/using-focus-to-style-outer-div
 		-->
 		<div id="div_result" tabindex="0" class="display-none"></div>
+		<div id="btn_download_wrapper"></div>
 	</div>
 </body>
 
-<script src="https://web.ist.utl.pt/antonio.afonso/www.aadsm.net/libraries/id3/scripts/id3-minimized.js"></script>
-<script src="read_audio_info.js"></script>
+<script src="id3-minimized.js"></script>
+<script src="scroll.js"></script>
+<script src="script.js"></script>
 
-<script>
-	var input_lyric = document.getElementById("input_lyric");
-	var div_result = document.getElementById("div_result");
-	var btn_play = document.getElementById("btn_play");
-	var btn_next = document.getElementById("btn_next");
-	var myAudio, artist, title;
-	var audio_wrapper = document.getElementById("audio_wrapper");
-	var song_details = document.getElementById("song_details");
-	var lds_roller_wrapper = document.getElementsByClassName("lds-roller-wrapper")[0];
-
-	// thời điểm bắt đầu chạy nhạc (bắt đầu tạo lời bài hát)
-	var startTime;
-
-	// thời điểm bắt đầu của 1 từ
-	var prevTime;
-
-	// thời điểm kết thúc của 1 từ
-	var currTime;
-	
-	// chỉ số của từ hiện tại để chèn thêm milisecond
-	var index;
-
-	// biến global để dễ debug :v
-	// words[a][b] = từ ở hàng thứ a, cột b
-	var words = [];
-
-	// Dùng để tạo effect khi đang ở 1 từ nào đó
-	var interval;
-	var percent = 0;
-
-	function showLoading() {
-		lds_roller_wrapper.classList.remove("display-none");
-	}
-
-	function hideLoading() {
-		// delay 100ms for seeing the loading icon more clearly :v
-		setTimeout(function() {
-			lds_roller_wrapper.classList.add("display-none");
-		}, 100);
-	}
-	function playSong() {
-		// init words array
-		words = input_lyric.value.trim().split("\n");
-		for(var i = 0; i < words.length; i++) {
-			words[i] = words[i].split(" ");
-		}
-		index = 0;
-
-		/*============= insert data into div_result =============*/
-		div_result.innerHTML = "";
-		var indexTemp = 0;
-
-		// thêm 1 span rỗng vào từ đầu tiên
-		var spanEmpty = document.createElement("span");
-		spanEmpty.setAttribute("id", "word_" + indexTemp);
-		div_result.appendChild(spanEmpty);
-		indexTemp++;
-
-		for(var i = 0; i < words.length; i++) {
-			for(var j = 0; j < words[i].length; j++) {
-				//console.log(" words[i][j] = ",  words[i][j]);
-
-				// bỏ qua những ký tự rỗng (do 1 dòng ko có chữ gì)
-				if(words[i][j] == "") continue;
-
-				var span = document.createElement("span");
-				span.innerText = words[i][j] + (j==words[i].length-1 ? "" : " ");
-				span.setAttribute("id", "word_" + indexTemp);
-				if(j == 0 & i != 0) {
-					span.classList.add("start_line");
-
-					var br = document.createElement("br");
-					div_result.appendChild(br);
-				}
-
-				div_result.appendChild(span);
-				indexTemp++;
-			}
-		}
-
-		btn_next.disabled = false;
-		btn_next.focus();
-		div_result.classList.remove("display-none");
-		
-		// start play song
-		myAudio.currentTime = 0
-		myAudio.play();
-
-		// bắt đầu tính giờ
-		startTime = new Date().valueOf();
-		prevTime = startTime;
-		currTime = startTime;
-	}
-
-	function nextWord() {
-		currTime = new Date().valueOf();
-		var currWord = document.getElementById("word_" + index);
-		var nextWord = document.getElementById("word_" + (index+1));
-		//var prevWord = document.getElementById("word_" + (index-1));
-
-		//console.log(prevWord);
-
-		var timeString = "";
-
-		createBiggerWordEffect(currWord, nextWord);
-
-		if(index == 0) {
-			// Đây là từ đầu tiên
-			timeString += getFormattedPassTime(currTime - startTime);
-			currWord.innerHTML = timeString + currWord.innerHTML;
-			currWord.classList.add("passed_word");
-			
-			prevTime = currTime;
-			index++
-			return;
-		}
-
-		if(currWord.classList.contains("start_line")) {
-			// prevTime lúc này chính là thời điểm kết thúc của từ cuối cùng của hàng trước đó (Xem [1])
-			timeString += getFormattedPassTime(prevTime - startTime);
-		}
-		timeString += "<" + (currTime - prevTime) + ">";
-
-		currWord.innerHTML = timeString + currWord.innerHTML;
-		currWord.classList.add("passed_word");
-
-		// scroll down
-		div_result.scrollTop = currWord.offsetTop - document.getElementById("word_1").offsetTop - 50;
-		
-		// [1] Set thời điểm bắt đầu của từ này = thời điểm kết thúc của từ này
-		// (để dùng cho việc tính toán thời điểm của từ tiếp theo)
-		prevTime = currTime;
-		index++;
-	}
-
-	function createKaraokeEffect(currWord, nextWord) {
-		window.clearInterval(interval);
-		percent = 0;
-		if(currWord!=null) currWord.style.background = "";
-
-		interval = window.setInterval(function() {
-			if(percent < 60) percent += 10;
-			else if(percent < 99) percent += (100 - percent)/5;
-			else window.clearInterval(interval);
-
-			if(nextWord!=null) nextWord.style.background = "linear-gradient(to right, #00b217 " + percent + "%, #ffffff00 " + (100 - percent) + "%)";
-		}, 300);
-	}
-
-	function createBiggerWordEffect(currWord, nextWord) {
-		if(currWord!=null) currWord.classList.remove("bigger_word");
-		if(nextWord!=null) nextWord.classList.add("bigger_word");
-	}
-
-	/**
-	 * Trả về thời gian theo format [minute:second.milisecond]
-	 * @param milisec: thời gian cần format
-	 **/
-	function getFormattedPassTime(milisec) {
-		var minute = Math.floor(milisec/60000);  // 1 minute = 60000 ms
-		var second = Math.floor((milisec - minute*60000)/1000);   //1 second = 1000 ms
-		var milisecond = Math.floor(milisec - minute*60000 - second*1000);
-
-		var temp2 = new Date().valueOf();
-		return "[" + minute + ":" + second + "." + milisecond + "]";
-	}
-</script>
 </html>
