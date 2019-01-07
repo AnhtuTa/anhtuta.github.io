@@ -82,7 +82,7 @@ function playSong() {
 
     // scroll down
     // document.body.scrollTop = btn_play.offsetTop;
-    doScrolling("#myAudio", 500);
+    doScrolling("#cbShowTime", 500);
 
     // start play song
     myAudio.currentTime = 0
