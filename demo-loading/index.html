@@ -1,6 +1,4 @@
-
 <html>
-
 <head>
 	<meta charset="utf-8" />
 	<title>Loading demo</title>
@@ -37,8 +35,12 @@
 			margin: -3px 0 0 -3px;
 		}
 
+		:root {
+			/* --speed: -0.036s; */
+			--speed: -0.052s;
+		}
 		.lds-roller div:nth-child(1) {
-			animation-delay: -0.036s;
+			animation-delay: var(--speed);
 		}
 
 		.lds-roller div:nth-child(1):after {
@@ -47,7 +49,7 @@
 		}
 
 		.lds-roller div:nth-child(2) {
-			animation-delay: -0.072s;
+			animation-delay: calc(var(--speed)*2);
 		}
 
 		.lds-roller div:nth-child(2):after {
@@ -56,7 +58,7 @@
 		}
 
 		.lds-roller div:nth-child(3) {
-			animation-delay: -0.108s;
+			animation-delay: calc(var(--speed)*3);
 		}
 
 		.lds-roller div:nth-child(3):after {
@@ -65,7 +67,7 @@
 		}
 
 		.lds-roller div:nth-child(4) {
-			animation-delay: -0.144s;
+			animation-delay: calc(var(--speed)*4);
 		}
 
 		.lds-roller div:nth-child(4):after {
@@ -74,7 +76,7 @@
 		}
 
 		.lds-roller div:nth-child(5) {
-			animation-delay: -0.18s;
+			animation-delay: calc(var(--speed)*5);
 		}
 
 		.lds-roller div:nth-child(5):after {
@@ -83,7 +85,7 @@
 		}
 
 		.lds-roller div:nth-child(6) {
-			animation-delay: -0.216s;
+			animation-delay: calc(var(--speed)*6);
 		}
 
 		.lds-roller div:nth-child(6):after {
@@ -92,7 +94,7 @@
 		}
 
 		.lds-roller div:nth-child(7) {
-			animation-delay: -0.252s;
+			animation-delay: calc(var(--speed)*7);
 		}
 
 		.lds-roller div:nth-child(7):after {
@@ -101,7 +103,7 @@
 		}
 
 		.lds-roller div:nth-child(8) {
-			animation-delay: -0.288s;
+			animation-delay: calc(var(--speed)*8);
 		}
 
 		.lds-roller div:nth-child(8):after {
