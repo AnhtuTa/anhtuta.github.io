@@ -58,13 +58,12 @@ function playSong() {
 
     for(var i = 0; i < words.length; i++) {
         for(var j = 0; j < words[i].length; j++) {
-            //console.log(" words[i][j] = ",  words[i][j]);
-
-            // bỏ qua những ký tự rỗng (do 1 dòng ko có chữ gì)
-            //if(words[i][j] == "") continue;
-
             var span = document.createElement("span");
-            span.innerText = words[i][j] + (j==words[i].length-1 ? "" : " ");
+            if(words[i][j] == "") {
+                span.innerHTML = "&nbsp" + (j==words[i].length-1 ? "" : " ");
+            } else {
+                span.innerText = words[i][j] + (j==words[i].length-1 ? "" : " ");
+            }
             span.setAttribute("id", "word_" + indexTemp);
             if(j == 0 & i != 0) {
                 span.classList.add("start_line");
@@ -82,7 +81,8 @@ function playSong() {
 
     // scroll down
     // document.body.scrollTop = btn_play.offsetTop;
-    doScrolling("#cbShowTime", 500);
+    // doScrolling("#myAudio", 500);
+    scrollPage(document.getElementById("myAudio"), 500);
 
     // start play song
     myAudio.currentTime = 0
@@ -129,34 +129,26 @@ var currWord, nextWord;
 function btnNextWord() {
     currTime = new Date().valueOf();
     var diff;
+    var timeString = "";
+
     if(finishTime > prevTime && finishTime < currTime) {
-        console.log("vaoday");
         diff = finishTime - prevTime;
     } else {
         diff = currTime - prevTime;
     }
-    //console.log(startTime/100000, currTime/100000, finishTime/100000);
 
     currWord = document.getElementById("word_" + index);
     nextWord = document.getElementById("word_" + (index+1));
-    //var prevWord = document.getElementById("word_" + (index-1));
-    var isCurrwordWordEmpty = currWord.innerText.trim() == "" ? true : false;
-
-    //console.log(prevWord);
-
-    var timeString = "";
-
     createBiggerWordEffect(currWord, nextWord);
 
     if(index == 0) {
         // Đây là từ đầu tiên
         timeString += getFormattedPassTime(currTime - startTime);
-        // currWord.innerHTML = timeString + currWord.innerHTML;
         addTimeBeforeWord(currWord, timeString);
         currWord.classList.add("passed_word");
         
+        index++;
         prevTime = currTime;
-        index++
         return;
     }
 
@@ -165,7 +157,6 @@ function btnNextWord() {
         timeString += getFormattedPassTime(prevTime - startTime);
     }
     timeString += "<" + diff + ">";
-    //timeString += "<" + (currTime - prevTime) + ">";
 
     if(finishTime > prevTime && finishTime < currTime) {
         addTimeAfterWord(currWord, "<" + (currTime - finishTime) + ">");
@@ -174,14 +165,13 @@ function btnNextWord() {
     addTimeBeforeWord(currWord, timeString);
     currWord.classList.add("passed_word");
 
-    // scroll down
-    if(!isCurrwordWordEmpty)
-        div_result.scrollTop = currWord.offsetTop - document.getElementById("word_1").offsetTop - 50;
+    div_result.scrollTop = currWord.offsetTop - document.getElementById("word_1").offsetTop - 50;
+    
+    index++;
     
     // [1] Set thời điểm bắt đầu của từ này = thời điểm kết thúc của từ này
     // (để dùng cho việc tính toán thời điểm của từ tiếp theo)
     prevTime = currTime;
-    index++;
 }
 
 function btnNextKeyPress(event) {
@@ -258,14 +248,13 @@ function createBiggerWordEffect(currWord, nextWord) {
 
 /**
  * Trả về thời gian theo format [minute:second.milisecond]
- * @param milisec: thời gian cần format
+ * @param {long} milisec: thời gian cần format
  **/
 function getFormattedPassTime(milisec) {
     var minute = Math.floor(milisec/60000);  // 1 minute = 60000 ms
     var second = Math.floor((milisec - minute*60000)/1000);   //1 second = 1000 ms
     var milisecond = Math.floor(milisec - minute*60000 - second*1000);
 
-    var temp2 = new Date().valueOf();
     return "[" + minute + ":" + second + "." + milisecond + "]";
 }
 
@@ -298,7 +287,7 @@ function downloadLyric() {
 
 function toggleWordTime() {
     var word_time = document.getElementsByClassName("word_time");
-    console.log(word_time);
+    //console.log(word_time);
 
     if(word_time[0].classList.contains("display-none")) {
         // show time
@@ -324,9 +313,15 @@ function loadSong(elem, event) {
     if(file == undefined) return;
 
     showLoading();
+    audio_wrapper.innerHTML = "";
 
     var url = file.urn ||file.name;
     loadUrl(url, null, FileAPIReader(file));
+
+    var note = document.createElement("div");
+    note.innerHTML = "Note: Please do not pause the audio during making lyric!";
+    note.setAttribute("style", "color: #2196F3;margin-bottom: 10px;");
+    audio_wrapper.appendChild(note);
 
     var audio = document.createElement("audio");
     audio.setAttribute("controls", "");
@@ -334,17 +329,9 @@ function loadSong(elem, event) {
     
     var source = document.createElement("source");
     source.src = URL.createObjectURL(elem.files[0]);
-
     audio.appendChild(source);
-
     myAudio = audio;
-    audio_wrapper.innerHTML = "";
     audio_wrapper.appendChild(audio);
-
-    var note = document.createElement("div");
-    note.innerHTML = "Note: Please do not pause the audio during making lyric!";
-    note.setAttribute("style", "color: #2196F3;margin-bottom: 10px;");
-    audio_wrapper.appendChild(note);
     
     btn_play.disabled = false;
     
