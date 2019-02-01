@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Liliana Player</title>
+    <style>
+        .body_wrapper {
+            padding: 0 10%;
+            padding-bottom: 30px;
+            font-family: "Segoe UI";
+        }
+        .liliana-lyric {
+            width: 100%;
+            height: 300px;
+            margin: 10px 0;
+            border-radius: 4px;
+            padding: 10px;
+        }
+        .word-active {
+            color: #41BDFF;
+            transition: .2s;
+        }
+        .line-active {
+            margin: 10px 0;
+            transition: 0.2s;
+            font-size: 1.2em;
+            color: #fff;
+            /* font-weight: bold; */
+        }
+        #div_result {
+            max-height: 400px;
+            overflow: auto;
+            border: 1px solid #bababa;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: "Segoe UI";
+            /* scroll-behavior: smooth; */
+            background-image: linear-gradient(#828282, #2f2f2f, #353535);
+            color: #dfdfdf;
+        }
+        #audio_wrapper audio {
+            width: 80%;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="body_wrapper">
+    <h2>Liliana Player</h2>
+    <div style="font-size: 16px;color: #888888;margin: 10px 0;">Posted on: 29/1/2019. Last modified: 31/1/2019</div>
+
+    <textarea class="liliana-lyric" placeholder="Paste lyric here..."></textarea>
+    <div style="margin: 10px 0 5px 0;">Select an audio file to play</div>
+    <input style="margin: 5px 0 10px 0;" type="file" onchange="loadSong(this, event)" accept="audio/*">
+    
+    <div id="song_details"></div>
+    <img style="max-width: 200px;" id="art" src="">
+    
+    <div id="audio_wrapper"></div>
+    
+    <div id="div_result" style="display: none;"></div>
+</div>
+</body>
+
+<script src="id3-minimized.js"></script>
+<script src="scroll.js"></script>
+<script src="liliana-player.js"></script>
+<script>
+    var liliana_lyric = document.getElementsByClassName("liliana-lyric")[0];
+    var div_result = document.getElementById("div_result");
+    var audio_wrapper = document.getElementById("audio_wrapper");
+    var song_details = document.getElementById("song_details");
+    var words = [];
+    var startTimes = [];
+    var endTimes = [];
+    var myAudio;
+
+    // offset time in second
+    var offsetTime;
+
+    var cntWord, currWordID, prevWordID;
+    var playLyricInterval;
+
+    function setPlayLyricInterval() {
+        playLyricInterval = setInterval(function() {
+            updateLyric();
+        }, 10);
+    }
+
+    function clearPlayLyricInterval() {
+        clearInterval(playLyricInterval);
+        playLyricInterval = null;
+    }
+
+    function initLyric() {
+        cntWord = 0;
+        currWordID = null, prevWordID = null;
+        div_result.style.display = "";
+
+        words = liliana_lyric.value.trim().split("\n");
+        var temp, startLine, wordsInLine, startWord, endWord;
+        for(var i = 0; i < words.length; i++) {
+            temp = words[i].match(/\[\d+:\d+\.\d+\]/g);
+            if(temp != null) {
+                startLine = decodeTime(temp[0]);
+                temp = words[i].substring(temp[0].length);
+                wordsInLine = temp.match(/<\d+>[^\<]*/g);
+
+                let divLine = createNewElement("div", null, "line");
+
+                startWord = startLine;
+                for (let j = 0; j < wordsInLine.length; j++) {
+                    // match(/\d+/)[0]: lấy số đầu tiên trong string này
+                    // VD: string này có dạng: "<123>demo " thì kết quả là 123
+                    // VD: string này có dạng: "<123>demo 949" thì kết quả là 123
+                    endWord = startWord + parseFloat(wordsInLine[j].match(/\d+/)[0])/1000;
+                    endWord = myParseFloat(endWord);
+                    
+                    // Do lưu time vào 2 mảng startTimes và endTimes nên có thể ko cần
+                    // thêm attribute time-start và time-start nữa
+                    let spanWord = createNewElement("span", "word-" + cntWord, "", {"time-start":startWord, "time-end": endWord});
+                    spanWord.innerText = wordsInLine[j].replace(/<\d+>/, "");
+                    if (spanWord.innerText == "") spanWord.innerHTML = "&nbsp";
+                    startTimes[cntWord] = startWord;
+                    endTimes[cntWord] = endWord;
+
+                    startWord = endWord;
+                    cntWord++;
+                    divLine.appendChild(spanWord);
+                }
+                div_result.appendChild(divLine);
+            } else {
+                if(words[i].includes("offset:")) {
+                    offsetTime = words[i].match(/[0-9|-]+/g);
+                    offsetTime = parseInt(offsetTime);
+                }
+            }
+        }
+        
+        scrollPage(document.getElementById("myAudio"), 500);
+    }
+
+    /**
+     * VD: num = parseFloat("42.318")+100
+     * kết quả sẽ ra là num = 142.31799999999998, chứ đéo phải 142.318
+     * -_- @_@ ===> WTF???
+     * do đó cần convert num thành số có 3 chữ số sau dấu phẩy (3 decimal places)
+     **/
+    function myParseFloat(num) {
+        return parseFloat(num.toFixed(3));
+    }
+
+    /*
+     * CHÚ Ý [1]: Nếu lyric sai thời gian:
+     * VD: nếu startTimes[4] = 3, endTimes[4] = 5 và
+     * startTimes[5] = 4, endTimes[5] = 6, ta thấy 2 từ này có khoảng
+     * thời gian chồng lên nhau, do lỗi lyric
+     * Fix: xem thêm hàm getCurrentWordByTime
+     */
+    function updateLyric() {
+        if (currWordID != null) {
+            let st = startTimes[currWordID] + offsetTime/1000;
+            let en = endTimes[currWordID] + offsetTime/1000;
+            
+            // ko dùng cái này để tối ưu nữa, để fix lỗi CHÚ Ý [1]
+            //if (st <= myAudio.currentTime && en >= myAudio.currentTime) return;
+            
+            let prevWord = document.getElementById("word-"+currWordID);
+            prevWord.classList.remove("word-active");
+
+            // remove bôi đen tất cả các từ trước đó trong dòng này
+            let parent = prevWord.parentNode;
+            for (let i = 0; i < parent.children.length; i++) {
+                if(parent.children[i] == prevWord) break;
+                parent.children[i].classList.remove("word-active");
+            }
+
+            parent.classList.remove("line-active");
+        }
+
+        currWordID = getCurrentWordByTime(myAudio.currentTime);
+        if (currWordID != -1) {
+            let word = document.getElementById("word-" + currWordID);
+            word.classList.add("word-active");
+            //if(word.parentNode.innerText.trim() != "")
+            let parent = word.parentNode;
+            parent.classList.add("line-active");
+            
+            // Bôi đen tất cả các từ trước đó trong dòng này
+            for (let i = 0; i < parent.children.length; i++) {
+                if(parent.children[i] == word) break;
+                parent.children[i].classList.add("word-active");
+            }
+
+            // scroll
+            div_result.scrollTop = word.offsetTop - document.getElementById("word-0").offsetTop - 180;
+            
+            // ko thể dùng hàm scroll, vì hàm updateLyric() được gọi liên tục
+            // nên việc scroll này ko diễn ra kịp, do đó nó luôn scroll lên top
+            // mà ko scroll xuống vị trí mong muốn
+            //scrollInsideElementToCenter(div_result, parent, 200);
+
+            // if(word == parent.childNodes[0])
+            //     scrollInsideElementToCenter(div_result, parent, 200);
+        }
+    }
+
+    /**
+     * get the word base on a time, using binary search
+     * Node: offsetTime will be added in this place
+     * @param {float} Current time of audio in second
+     * @return {Integer} id of word
+     **/
+    function getCurrentWordByTime(sec) {
+        let lo = 0, hi = cntWord-1;
+        let mid, st, en;
+
+        // while(lo <= hi) {
+        //     mid = parseInt((lo+hi)/2);
+        //     st = startTimes[mid] + offsetTime/1000;
+        //     en = endTimes[mid] + offsetTime/1000;
+        //     if(st <= sec && en >= sec) return mid;
+        //     else if (st > sec) hi = mid-1;
+        //     else lo = mid+1;
+        // }
+
+        while(lo <= hi) {
+            mid = parseInt((lo+hi)/2);
+            st = startTimes[mid] + offsetTime/1000;
+            en = endTimes[mid] + offsetTime/1000;
+
+            if(st <= sec && en >= sec) {
+                // fix lỗi CHÚ Ý [1]:
+                // Nếu như có 2 từ có khoảng thời gian bị chồng
+                // lên nhau thì ta ưu tiên từ đứng đằng sau
+                st = startTimes[mid+1] + offsetTime/1000;
+                en = endTimes[mid+1] + offsetTime/1000;
+                if(st <= sec && en >= sec) return mid+1;
+                else return mid;
+            }
+            else if (st > sec) hi = mid-1;
+            else lo = mid+1;
+        }
+
+        // ko tìm thấy thẻ nào có st <= sec <= en. tuy vậy, vẫn return thẻ gần đó nhất
+        console.log("Cannot found a tag that the value of \"sec\" is " +
+            "between its duration (st <= sec <= en). Return nearest tag: " + mid);
+        
+        // delete interval when finish song!
+        if (sec > endTimes[cntWord-1]) clearPlayLyricInterval();
+
+        return mid;
+    }
+
+    /**
+     * Convert time stamp to seconds
+     * @param {string} timestamp Lyrics time stamp, in format [2:17.88] or [1:03:45.32]
+     * @return {number} Time in seconds, float number
+     * Reference: https://github.com/guoyunhe/rabbit-lyrics/blob/master/src/index.js
+     */
+    function decodeTime(timestamp) {
+        if (!timestamp || typeof timestamp !== "string") return 0;
+        let results;
+
+        // [hh:mm:ss.xx] format, used by some long audio books
+        results = timestamp.match(/\[(\d+):(\d+):(\d+\.\d+)\]/);
+        if (results && results.length === 4) {
+            return parseFloat((
+                parseInt(results[1]) * 60 * 60 +
+                parseInt(results[2]) * 60 +
+                parseFloat(results[3])
+            ).toFixed(3));
+        }
+
+        // [mm:ss.xx] format, widely used for songs
+        // chú ý: regex này có 2 group: (\d+) và (\d+\.\d+)
+        // do đó results sẽ là 1 mảng chứa 2 group này
+        results = timestamp.match(/\[(\d+):(\d+\.\d+)\]/);
+        if (results && results.length === 3) {
+            return parseFloat((parseInt(results[1]) * 60 + parseFloat(results[2])).toFixed(3));
+        }
+
+        return 0;
+    }
+
+    /**
+     * create and return new element
+     * @param {string} tagName type of tag to create (ex: div, span, h1...)
+     * @param {string} id id of tag
+     * @param {string} classList list of classes for this tag
+     * @param {JSON} attributes list of attribute this tag
+     * @return {HTMLElement} element that be created
+     **/
+    function createNewElement(tagName, id, classList, attributes=null) {
+        let ele = document.createElement(tagName);
+
+        if (id != null && typeof id === "string" && id != "") {
+            ele.setAttribute("id", id);
+        }
+        if (classList != null && typeof classList === "string" && classList != "") {
+            ele.setAttribute("class", classList);
+        }
+        if (attributes != null && typeof attributes === "object") {
+            let key;
+            for (let i = 0; i < Object.keys(attributes).length; i++) {
+                ele.setAttribute(Object.keys(attributes)[i], attributes[Object.keys(attributes)[i]]);
+            }
+        }
+
+        return ele;
+    }
+</script>
+</html>
