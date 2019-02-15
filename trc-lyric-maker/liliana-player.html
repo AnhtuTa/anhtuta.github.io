@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -17,6 +16,7 @@
             margin: 10px 0;
             border-radius: 4px;
             padding: 10px;
+            box-sizing: border-box;
         }
         .word-active {
             color: #41BDFF;
@@ -36,22 +36,77 @@
             padding: 10px;
             margin: 10px 0;
             font-family: "Segoe UI";
-            /* scroll-behavior: smooth; */
+            scroll-behavior: smooth;
             background-image: linear-gradient(#828282, #2f2f2f, #353535);
             color: #dfdfdf;
+            float: left;
+            width: calc(100% - 70px);
+        }
+        #audio_wrapper {
+            width: calc(100% - 48px);
         }
         #audio_wrapper audio {
-            width: 80%;
+            width: 100%;
             margin: 10px 0;
         }
+        .btn_sync_wrapper {
+            position: relative;
+            top: 10px;
+        }
+        .btn_sync_up, .btn_sync_down {
+            display: inline-block;
+            background: #fff;
+            color: #2196F3;
+            padding: 0px 13px 5px 13px;
+            font-size: 30px;
+            position: absolute;
+            right: 0;
+            transition: 0.2s;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 1px 1px 2px 2px #ccc;
+        }
+        .btn_sync_up:hover, .btn_sync_down:hover {
+            display: inline-block;
+            background: #2196F3;
+            color: #fff;
+        }
+        .btn_sync_up {
+            top: 0;
+        }
+        .btn_sync_down {
+            top: 50px;
+        }
+
+        /* scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .toast-message {
+            font-family: "Segoe UI";
+        }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
 </head>
 <body>
 <div class="body_wrapper">
-    <h2>Liliana Player</h2>
-    <div style="font-size: 16px;color: #888888;margin: 10px 0;">Posted on: 29/1/2019. Last modified: 31/1/2019</div>
+    <div style="/*border: 2px solid #2196F3;*/">
+    
+    <h2 style="color: #2196F3;">Liliana Player</h2>
+    <div style="font-size: 16px;color: #888888;margin: 10px 0;">Posted on: 29/1/2019. Last modified: 14/2/2019</div>
 
-    <textarea class="liliana-lyric" placeholder="Paste lyric here..."></textarea>
+    <textarea class="liliana-lyric custom-scrollbar" placeholder="Paste lyric here..."></textarea>
     <div style="margin: 10px 0 5px 0;">Select an audio file to play</div>
     <input style="margin: 5px 0 10px 0;" type="file" onchange="loadSong(this, event)" accept="audio/*">
     
@@ -60,16 +115,32 @@
     
     <div id="audio_wrapper"></div>
     
-    <div id="div_result" style="display: none;"></div>
+    <div id="lyric_playground" style="display: none;">
+        <div id="div_result" class="custom-scrollbar"></div>
+        <div class="btn_sync_wrapper">
+            <div class="btn_sync_up">
+                <i class="fa fa-angle-up"></i>
+            </div>
+            <div class="btn_sync_down">
+                <i class="fa fa-angle-down"></i>
+            </div>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+
+    </div>
 </div>
 </body>
 
 <script src="id3-minimized.js"></script>
 <script src="scroll.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <script src="liliana-player.js"></script>
 <script>
     var liliana_lyric = document.getElementsByClassName("liliana-lyric")[0];
     var div_result = document.getElementById("div_result");
+    var lyric_playground = document.getElementById("lyric_playground");
     var audio_wrapper = document.getElementById("audio_wrapper");
     var song_details = document.getElementById("song_details");
     var words = [];
@@ -97,7 +168,7 @@
     function initLyric() {
         cntWord = 0;
         currWordID = null, prevWordID = null;
-        div_result.style.display = "";
+        lyric_playground.style.display = "";
 
         words = liliana_lyric.value.trim().split("\n");
         var temp, startLine, wordsInLine, startWord, endWord;
@@ -183,11 +254,11 @@
         currWordID = getCurrentWordByTime(myAudio.currentTime);
         if (currWordID != -1) {
             let word = document.getElementById("word-" + currWordID);
+            let parent = word.parentNode;            
+
             word.classList.add("word-active");
-            //if(word.parentNode.innerText.trim() != "")
-            let parent = word.parentNode;
             parent.classList.add("line-active");
-            
+
             // Bôi đen tất cả các từ trước đó trong dòng này
             for (let i = 0; i < parent.children.length; i++) {
                 if(parent.children[i] == word) break;
@@ -195,16 +266,17 @@
             }
 
             // scroll
-            div_result.scrollTop = word.offsetTop - document.getElementById("word-0").offsetTop - 180;
-            
-            // ko thể dùng hàm scroll, vì hàm updateLyric() được gọi liên tục
-            // nên việc scroll này ko diễn ra kịp, do đó nó luôn scroll lên top
-            // mà ko scroll xuống vị trí mong muốn
-            //scrollInsideElementToCenter(div_result, parent, 200);
-
-            // if(word == parent.childNodes[0])
-            //     scrollInsideElementToCenter(div_result, parent, 200);
+            if(word == parent.childNodes[0] && word.innerText.trim() != "") {
+                scrollLyric();
+            }
         }
+    }
+
+    function scrollLyric(currWord=null) {
+        if(currWord == null) {
+            currWord = document.getElementById("word-" + currWordID);
+        }
+        div_result.scrollTop = currWord.offsetTop - document.getElementById("word-0").offsetTop - div_result.offsetHeight/2 + 20;
     }
 
     /**
@@ -216,15 +288,6 @@
     function getCurrentWordByTime(sec) {
         let lo = 0, hi = cntWord-1;
         let mid, st, en;
-
-        // while(lo <= hi) {
-        //     mid = parseInt((lo+hi)/2);
-        //     st = startTimes[mid] + offsetTime/1000;
-        //     en = endTimes[mid] + offsetTime/1000;
-        //     if(st <= sec && en >= sec) return mid;
-        //     else if (st > sec) hi = mid-1;
-        //     else lo = mid+1;
-        // }
 
         while(lo <= hi) {
             mid = parseInt((lo+hi)/2);
