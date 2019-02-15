@@ -154,6 +154,7 @@ function btnNextWord() {
 
     if(currWord.classList.contains("start_line")) {
         // prevTime lúc này chính là thời điểm kết thúc của từ cuối cùng của hàng trước đó (Xem [1])
+        //fixJsSidaError(prevTime);
         timeString += getFormattedPassTime(prevTime - startTime);
     }
     timeString += "<" + diff + ">";
@@ -165,6 +166,7 @@ function btnNextWord() {
     addTimeBeforeWord(currWord, timeString);
     currWord.classList.add("passed_word");
 
+    // scroll lyric
     div_result.scrollTop = currWord.offsetTop - document.getElementById("word_1").offsetTop - 50;
     
     index++;
@@ -251,11 +253,18 @@ function createBiggerWordEffect(currWord, nextWord) {
  * @param {long} milisec: thời gian cần format
  **/
 function getFormattedPassTime(milisec) {
-    var minute = Math.floor(milisec/60000);  // 1 minute = 60000 ms
-    var second = Math.floor((milisec - minute*60000)/1000);   //1 second = 1000 ms
-    var milisecond = Math.floor(milisec - minute*60000 - second*1000);
+    // TẠI SAO PHẢI LÀM PHỨC TẠP NHƯ SAU, LẠI CÒN BỊ SAI NỮA
+    // VD: getFormattedPassTime(119056) = [1:59.56] (sai!), chứ ko phải [1:59.056]
+    // var minute = Math.floor(milisec/60000);  // 1 minute = 60000 ms
+    // var second = Math.floor((milisec - minute*60000)/1000);   //1 second = 1000 ms
+    // var milisecond = Math.floor(milisec - minute*60000 - second*1000);
+    // return "[" + minute + ":" + second + "." + milisecond + "]";
 
-    return "[" + minute + ":" + second + "." + milisecond + "]";
+    // Cách đơn giản mà đúng: getFormattedPassTime(119056) = [1:59.056]
+    var minute = Math.floor(milisec/60000);  // 1 minute = 60000 ms
+    var second = (milisec - minute*60000)/1000;   //1 second = 1000 ms
+
+    return "[" + minute + ":" + second + "]";
 }
 
 function showLoading() {
@@ -304,6 +313,7 @@ function toggleWordTime() {
     }
 }
 
+// reference: https://github.com/aadsm/JavaScript-ID3-Reader
 function loadSong(elem, event) {
     disableBtns();
     
@@ -344,18 +354,8 @@ function loadUrl(url, callback, reader) {
     var startDate = new Date().getTime();
     ID3.loadTags(url, function() {
         var endDate = new Date().getTime();
-        // if (typeof console !== "undefined") console.log("Time: " + ((endDate-startDate)/1000)+"s");
         var tags = ID3.getAllTags(url);
-        
-        // $("artist").textContent = tags.artist || "";
-        // $("title").textContent = tags.title || "";
-        // $("album").textContent = tags.album || "";
-        // $("artist").textContent = tags.artist || "";
-        // $("year").textContent = tags.year || "";
-        // $("comment").textContent = (tags.comment||{}).text || "";
-        // $("genre").textContent = tags.genre || "";
-        // $("track").textContent = tags.track || "";
-        // $("lyrics").textContent = (tags.lyrics||{}).lyrics || "";
+
         song_details.innerHTML = tags.artist + " - " + tags.title + (tags.album==undefined||tags.album.trim()=="" ? "" : " (" + tags.album + ")");
         artist = tags.artist;
         title = tags.title;
