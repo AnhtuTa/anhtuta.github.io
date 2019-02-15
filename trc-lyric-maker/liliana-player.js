@@ -1,10 +1,31 @@
+var btn_sync_up = document.getElementsByClassName("btn_sync_up")[0];
+var btn_sync_down = document.getElementsByClassName("btn_sync_down")[0];
+toastr.options = {
+    "closeButton": false,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": false,
+    "positionClass": "toast-bottom-center",
+    "preventDuplicates": false,
+    "onclick": null,
+    "showDuration": "200",
+    "hideDuration": "200",
+    "timeOut": "3000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+}
+
+// reference: https://github.com/aadsm/JavaScript-ID3-Reader
 function loadSong(elem, event) {
     var file = elem.files[0];
     if(file == undefined) return;
 
     audio_wrapper.innerHTML = "";
     div_result.innerHTML = "";
-    div_result.style.display = "none";
+    lyric_playground.style.display = "none";
     clearPlayLyricInterval();
 
     var url = file.urn ||file.name;
@@ -29,7 +50,12 @@ function loadSong(elem, event) {
         if(playLyricInterval == null) setPlayLyricInterval();
     }
     myAudio.onseeked = function() {
-        if(playLyricInterval == null) setPlayLyricInterval();
+        if(playLyricInterval == null) {
+            // setPlayLyricInterval();
+            // clearPlayLyricInterval();
+            updateLyric();
+            scrollLyric();
+        }
     }
     myAudio.onpause = function() {
         if(playLyricInterval != null) clearPlayLyricInterval();
@@ -66,3 +92,19 @@ function loadUrl(url, callback, reader) {
     {tags: ["artist", "title", "album", "year", "comment", "track", "genre", "lyrics", "picture"],
     dataReader: reader});
 }
+
+function showSyncToast() {
+    if (offsetTime > 0) {
+        toastr["info"]("Delay " + offsetTime + "ms");
+    } else {
+        toastr["info"]("Advance " + (0-offsetTime) + "ms");
+    }
+}
+btn_sync_up.addEventListener("click", function() {
+    offsetTime += 100;
+    showSyncToast();
+});
+btn_sync_down.addEventListener("click", function() {
+    offsetTime -= 100;
+    showSyncToast();
+});
