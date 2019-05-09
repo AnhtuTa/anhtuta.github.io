@@ -3,7 +3,7 @@ var div_result = document.getElementById("div_result");
 var btn_play = document.getElementById("btn_play");
 var btn_next = document.getElementById("btn_next");
 var btn_finish = document.getElementById("btn_finish");
-var myAudio, artist, title;
+var myAudio, artist, title, audioFileName;
 var audio_wrapper = document.getElementById("audio_wrapper");
 var song_details = document.getElementById("song_details");
 var lds_roller_wrapper = document.getElementsByClassName("lds-roller-wrapper")[0];
@@ -286,7 +286,10 @@ function downloadLyric() {
     var a = document.body.appendChild(
         document.createElement("a")
     );
-    a.download = artist + " - " + title + ".trc";
+    if(artist != null && title != null)
+        a.download = artist + " - " + title + ".trc";
+    else a.download = audioFileName.substring(0, audioFileName.length-4) + ".trc";
+
     a.href = "data:text/plain," + document.getElementById("div_result").innerText;
     a.click(); // Trigger a click on the element
 
@@ -316,6 +319,7 @@ function toggleWordTime() {
 // reference: https://github.com/aadsm/JavaScript-ID3-Reader
 function loadSong(elem, event) {
     disableBtns();
+    title = artist = null;
     
     var file = elem.files[0];
     
@@ -327,6 +331,7 @@ function loadSong(elem, event) {
 
     var url = file.urn ||file.name;
     loadUrl(url, null, FileAPIReader(file));
+    audioFileName = file.name;
 
     var note = document.createElement("div");
     note.innerHTML = "Note: Please do not pause the audio during making lyric!";
@@ -359,6 +364,7 @@ function loadUrl(url, callback, reader) {
         song_details.innerHTML = tags.artist + " - " + tags.title + (tags.album==undefined||tags.album.trim()=="" ? "" : " (" + tags.album + ")");
         artist = tags.artist;
         title = tags.title;
+        console.log(artist, title);
 
         if( "picture" in tags ) {
                 var image = tags.picture;
