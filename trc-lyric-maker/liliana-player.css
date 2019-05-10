@@ -1,0 +1,304 @@
+.body_wrapper {
+    padding: 0 10%;
+    padding-bottom: 10px;
+    font-family: "Segoe UI";
+}
+.liliana-lyric {
+    width: 100%;
+    height: 110px;
+    margin: 10px 0;
+    border-radius: 4px;
+    padding: 10px;
+    box-sizing: border-box;
+    resize: vertical;
+    font-family: "Segoe UI";
+}
+.word-active {
+    color: #41BDFF;
+    transition: .2s;
+}
+.div-res-album-bg .word-active {
+    color: yellow;
+}
+.line-active {
+    margin: 10px 0;
+    transition: 0.2s;
+    font-size: 1.2em;
+    padding: 3px 7px;
+    border-radius: 13px;
+}
+#div_result {
+    overflow: auto;
+    font-family: "Segoe UI";
+    scroll-behavior: smooth;
+    transition: 0.4s;
+    padding-bottom: 30px;
+}
+
+/* Dark theme */
+.div-res-dark {
+    background-image: linear-gradient(#3f3f3f, #2f2f2f, #353535);
+    color: #dfdfdf;
+}
+.div-res-dark .line-active {
+    color: #fff;
+    background: #4c4c4c;
+    font-weight: bold;
+}
+
+/* Light theme */
+.div-res-light .line-active {
+    color: #575757;
+    background: #e8e8e8;
+    font-weight: bold;
+}
+
+/* AlbumBg theme */
+.div-res-album-bg {
+    color: #dfdfdf;
+}
+.div-res-album-bg .line-active {
+    color: #fff;
+    background: #4c4c4c69;
+    font-weight: bold;
+}
+
+.btn_sync_wrapper {
+    position: absolute;
+    top: 0px;
+    right: 14px;
+}
+.btn_toggle_setting {
+    display: inline-block;
+    color: #2196F3;
+    font-size: 23px;
+    transition: 0.2s;
+    cursor: pointer;
+    position: absolute;
+    right: 4px;
+    top: 4px;
+}
+.btn_sync_up, .btn_sync_down {
+    color: #2196F3;
+    font-size: 32px !important;
+    transition: 0.2s;
+    cursor: pointer;
+    position: relative;
+    top: 5px;
+}
+
+/* scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #888;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+.toast-message {
+    font-family: "Segoe UI";
+}
+.btn_align {
+    color: #2196F3;
+    font-size: 15px !important;
+    transition: 0.2s;
+    cursor: pointer;
+}
+.btn_align:hover, .btn_sync_up:hover, .btn_sync_down:hover,
+.btn_toggle_setting:hover, .btn_theme:hover {
+    text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+}
+#btn_reset_audio {
+    color: #41bdff;
+    cursor: pointer;
+    transition: 0.3s;
+    float: right;
+}
+#btn_reset_audio:hover {
+    color: #2196F3
+}
+.btn_theme {
+    font-size: 15px !important;
+    transition: 0.2s;
+    cursor: pointer;
+    text-shadow: -1px -1px 0 #2199F9, 1px -1px 0 #2199F9, -1px 1px 0 #2199F9, 1px 1px 0 #2199F9;
+    position: relative;
+    top: -4px;
+}
+.btn_theme_dark {
+    color: #363636;
+}
+.btn_theme_light {
+    color: #ddd;
+}
+.btn_theme_album_bg {
+    /* border: 1px solid #2199F9; */
+    transition: 0.2s;
+    border-radius: 4px;
+}
+.btn_theme_album_bg:hover {
+    border: 1px solid #fff;
+}
+@media only screen and (max-width: 700px) {
+    .body_wrapper {
+        padding: 0;
+        padding-bottom: 10px;
+        font-family: "Segoe UI";
+    }
+}
+.lyric_normal {
+    border: 1px solid #bababa;
+    padding: 10px;
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    height: 100%;
+}
+.lyric_fullscreen {
+    position: fixed !important;
+    top: 54px !important;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9;
+    margin: 0 !important;
+    font-size: 27px;
+    padding: 0 10%;
+    box-sizing: border-box;
+}
+.audio_normal {
+    width: 100%;
+}
+.audio_normal audio {
+    width: 100%;
+    margin: 10px 0;
+}
+.audio_fullscreen {
+    position: fixed!important;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9;
+    margin: 0 !important;
+    height: 54px;
+}
+.audio_fullscreen audio {
+    width: 100%;
+}
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.bg-image {
+	/* The image used */
+	/* background-image: url("background.jpg"); */
+
+	/* Add the blur effect */
+	filter: blur(3px);
+	-webkit-filter: blur(3px);
+
+	/* Full height */
+	height: 100%;
+
+	/* Center and scale the image nicely */
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+.bg-image-fullscreen {
+    position: fixed !important;
+    top: 54px !important;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/* Position text in the middle of the page/image */
+.div-res-album-bg {
+    background-color: rgba(0,0,0, 0.2);
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.div-res-dark .curr-word {
+    font-weight: bold;
+    text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+}
+.div-res-light .curr-word {
+    font-weight: bold;
+    text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+}
+.div-res-album-bg .curr-word {
+    font-weight: bold;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+.setting_seperator {
+    color: #737373;
+    font-weight: bold;
+    position: relative;
+    top: -3px;
+    font-size: 18px;
+}
+.song_title, .song_artist {
+    color: #2199F9;
+    font-size: 27px;
+    display: inline-block;
+}
+.song_album {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #03a9f4;
+}
+a {
+    color: #00B222;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+.all-song-label {
+    color: #2199F9;
+    font-size: 20px;
+    margin: 15px 0 5px 0;
+}
+.all-song-value {
+    height: 300px;
+    overflow-y: auto;
+    /* border: 1px solid #2199F9; */
+    /* border-radius: 4px; */
+    padding: 10px 0;
+    resize: vertical;
+    /* scroll-behavior: smooth; */
+}
+.table_striped {
+    border-collapse: collapse;
+}
+.table_striped>tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+/* .table_striped>tr {
+    border-top: 1px solid #ddd;
+} */
+.table_striped>tr>td {
+    padding: 5px;
+}
+.table_striped>tr>td:first-child {
+    text-align: right;
+}
+.table_striped>tr>th {
+    padding: 10px 5px;
+    text-align: left;
+    color: #ffffff;
+    background: #00b222;
+}
+#lyric_playground {
+    position: relative;
+    height: calc(100% - 75px);  /*75px = height của tag audio */
+}
