@@ -4,130 +4,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Liliana Player</title>
-    <style>
-        .body_wrapper {
-            padding: 0 10%;
-            padding-bottom: 30px;
-            font-family: "Segoe UI";
-        }
-        .liliana-lyric {
-            width: 100%;
-            height: 300px;
-            margin: 10px 0;
-            border-radius: 4px;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-        .word-active {
-            color: #41BDFF;
-            transition: .2s;
-        }
-        .line-active {
-            margin: 10px 0;
-            transition: 0.2s;
-            font-size: 1.2em;
-            color: #fff;
-            /* font-weight: bold; */
-        }
-        #div_result {
-            max-height: 400px;
-            overflow: auto;
-            border: 1px solid #bababa;
-            padding: 10px;
-            margin: 10px 0;
-            font-family: "Segoe UI";
-            scroll-behavior: smooth;
-            background-image: linear-gradient(#828282, #2f2f2f, #353535);
-            color: #dfdfdf;
-            float: left;
-            width: calc(100% - 70px);
-        }
-        #audio_wrapper {
-            width: calc(100% - 48px);
-        }
-        #audio_wrapper audio {
-            width: 100%;
-            margin: 10px 0;
-        }
-        .btn_sync_wrapper {
-            position: relative;
-            top: 12px;
-        }
-        .btn_sync_up, .btn_sync_down {
-            display: inline-block;
-            background: #fff;
-            color: #2196F3;
-            padding: 6px 12px 6px 12px;
-            font-size: 30px;
-            position: absolute;
-            right: 0;
-            transition: 0.2s;
-            cursor: pointer;
-            border-radius: 50%;
-            box-shadow: 1px 1px 2px 2px #ccc;
-        }
-        .btn_sync_up:hover, .btn_sync_down:hover {
-            display: inline-block;
-            background: #2196F3;
-            color: #fff;
-        }
-        .btn_sync_up {
-            top: 0;
-        }
-        .btn_sync_down {
-            top: 47px;
-        }
-
-        /* scrollbar */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #888;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-
-        .toast-message {
-            font-family: "Segoe UI";
-        }
-    </style>
+    <link rel="stylesheet" href="liliana-player.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
 </head>
 <body>
 <div class="body_wrapper">
     <div style="/*border: 2px solid #2196F3;*/">
+        <div id="hide_when_fullscreen">
+            <a href="./liliana-player.html" style="font-size: 27px;font-weight: bold;" title="Home">Liliana Player</a>
+            <div style="font-size: 16px;color: #888888;margin: 10px 0;">Posted on: 29/1/2019. Last modified: 8/5/2019</div>
     
-    <h2 style="color: #2196F3;">Liliana Player</h2>
-    <div style="font-size: 16px;color: #888888;margin: 10px 0;">Posted on: 29/1/2019. Last modified: 14/2/2019</div>
-
-    <textarea class="liliana-lyric custom-scrollbar" placeholder="Paste lyric here..."></textarea>
-    <div style="margin: 10px 0 5px 0;">Select an audio file to play</div>
-    <input style="margin: 5px 0 10px 0;" type="file" onchange="loadSong(this, event)" accept="audio/*">
+            <div id="all_songs"></div>
     
-    <div id="song_details"></div>
-    <img style="max-width: 200px;" id="art" src="">
-    
-    <div id="audio_wrapper"></div>
-    
-    <div id="lyric_playground" style="display: none;">
-        <div id="div_result" class="custom-scrollbar"></div>
-        <div class="btn_sync_wrapper">
-            <div class="btn_sync_up">
-                <i class="fa fa-angle-up"></i>
+            <div id="select_mp3_from_local">
+                <div class="all-song-label">Want to play local song? Using this</div>
+                <textarea class="liliana-lyric custom-scrollbar" placeholder="Paste lyric here..."></textarea>
+                <div style="margin: 10px 0 5px 0;">Select an audio file to play</div>
+                <input id="btn_select_audio" style="margin: 5px 0 10px 0;" type="file" onchange="loadSong(this, event)" accept="audio/*">
+                <div id="btn_reset_audio">Reset</div>
             </div>
-            <div class="btn_sync_down">
-                <i class="fa fa-angle-down"></i>
-            </div>
+    
+            <div id="song_details"></div>
+            <img style="max-width: 200px;" id="art" src="">
         </div>
-        <div style="clear: both;"></div>
-    </div>
-
+        
+        <div id="audio_wrapper" class="audio_normal"></div>
+        
+        <div id="lyric_playground" style="display: none;">
+            <div id="div_background" style="display: none;" class="bg-image"></div>
+            <div id="div_result" class="lyric_normal custom-scrollbar div-res-light" style="text-align: center;" class="custom-scrollbar"></div>
+            <div class="btn_sync_wrapper">
+                <div class="btn_toggle_setting" title="Settings">
+                    <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                </div>
+                <div id="setting_wrapper" style="display: none;text-align: right;">
+                    <i class="fa fa-angle-up btn_sync_up" title="Sync lyric: -100ms"></i>
+                    <i class="fa fa-angle-down btn_sync_down" title="Sync lyric: +100ms"></i>
+                    <i class="setting_seperator">|</i>
+                    <i class="fa fa-align-left btn_align btn_align_left" title="Lyric left alignment"></i>
+                    <i class="fa fa-align-center btn_align btn_align_center" title="Lyric center"></i>
+                    <i class="fa fa-align-right btn_align btn_align_right"  title="Lyric right alignment"></i><br>
+                    <i class="fa fa-square btn_theme btn_theme_dark" title="Dark theme"></i>
+                    <i class="fa fa-square btn_theme btn_theme_light" title="Light theme"></i>
+                    <i class="fa fa-home btn_theme btn_theme_album_bg" title="Album background theme"></i>
+                </div>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
     </div>
 </div>
 </body>
@@ -136,243 +60,7 @@
 <script src="scroll.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script src="config.js"></script>
+<script src="utils.js"></script>
 <script src="liliana-player.js"></script>
-<script>
-    var liliana_lyric = document.getElementsByClassName("liliana-lyric")[0];
-    var div_result = document.getElementById("div_result");
-    var lyric_playground = document.getElementById("lyric_playground");
-    var audio_wrapper = document.getElementById("audio_wrapper");
-    var song_details = document.getElementById("song_details");
-    var words = [];
-    var startTimes = [];
-    var endTimes = [];
-    var myAudio;
-
-    // offset time in milisecond
-    var offsetTime = 0;
-
-    var cntWord, currWordID, prevWordID;
-    var playLyricInterval;
-
-    function setPlayLyricInterval() {
-        playLyricInterval = setInterval(function() {
-            updateLyric();
-        }, 10);
-    }
-
-    function clearPlayLyricInterval() {
-        clearInterval(playLyricInterval);
-        playLyricInterval = null;
-    }
-
-    function initLyric() {
-        cntWord = 0;
-        currWordID = null, prevWordID = null;
-        lyric_playground.style.display = "";
-
-        words = liliana_lyric.value.trim().split("\n");
-        var temp, startLine, wordsInLine, startWord, endWord;
-        for(var i = 0; i < words.length; i++) {
-            temp = words[i].match(/\[\d+:\d+\.\d+\]/g);
-            if(temp != null) {
-                startLine = decodeTime(temp[0]);
-                temp = words[i].substring(temp[0].length);
-                wordsInLine = temp.match(/<\d+>[^\<]*/g);
-
-                let divLine = createNewElement("div", null, "line");
-
-                startWord = startLine;
-                for (let j = 0; j < wordsInLine.length; j++) {
-                    // match(/\d+/)[0]: lấy số đầu tiên trong string này
-                    // VD: string này có dạng: "<123>demo " thì kết quả là 123
-                    // VD: string này có dạng: "<123>demo 949" thì kết quả là 123
-                    endWord = startWord + parseFloat(wordsInLine[j].match(/\d+/)[0])/1000;
-                    endWord = myParseFloat(endWord);
-                    
-                    // Do lưu time vào 2 mảng startTimes và endTimes nên có thể ko cần
-                    // thêm attribute time-start và time-start nữa
-                    let spanWord = createNewElement("span", "word-" + cntWord, "", {"time-start":startWord, "time-end": endWord});
-                    spanWord.innerText = wordsInLine[j].replace(/<\d+>/, "");
-                    if (spanWord.innerText == "") spanWord.innerHTML = "&nbsp";
-                    startTimes[cntWord] = startWord;
-                    endTimes[cntWord] = endWord;
-
-                    startWord = endWord;
-                    cntWord++;
-                    divLine.appendChild(spanWord);
-                }
-                div_result.appendChild(divLine);
-            } else {
-                if(words[i].includes("offset:")) {
-                    offsetTime = words[i].match(/[0-9|-]+/g);
-                    offsetTime = parseInt(offsetTime);
-                }
-            }
-        }
-        
-        scrollPage(document.getElementById("myAudio"), 500);
-    }
-
-    /**
-     * VD: num = parseFloat("42.318")+100
-     * kết quả sẽ ra là num = 142.31799999999998, chứ đéo phải 142.318
-     * -_- @_@ ===> WTF???
-     * do đó cần convert num thành số có 3 chữ số sau dấu phẩy (3 decimal places)
-     **/
-    function myParseFloat(num) {
-        return parseFloat(num.toFixed(3));
-    }
-
-    /*
-     * CHÚ Ý [1]: Nếu lyric sai thời gian:
-     * VD: nếu startTimes[4] = 3, endTimes[4] = 5 và
-     * startTimes[5] = 4, endTimes[5] = 6, ta thấy 2 từ này có khoảng
-     * thời gian chồng lên nhau, do lỗi lyric
-     * Fix: xem thêm hàm getCurrentWordByTime
-     */
-    function updateLyric() {
-        if (currWordID != null) {
-            let st = startTimes[currWordID] + offsetTime/1000;
-            let en = endTimes[currWordID] + offsetTime/1000;
-            
-            // ko dùng cái này để tối ưu nữa, để fix lỗi CHÚ Ý [1]
-            //if (st <= myAudio.currentTime && en >= myAudio.currentTime) return;
-            
-            let prevWord = document.getElementById("word-"+currWordID);
-            prevWord.classList.remove("word-active");
-
-            // remove bôi đen tất cả các từ trước đó trong dòng này
-            let parent = prevWord.parentNode;
-            for (let i = 0; i < parent.children.length; i++) {
-                if(parent.children[i] == prevWord) break;
-                parent.children[i].classList.remove("word-active");
-            }
-
-            parent.classList.remove("line-active");
-        }
-
-        currWordID = getCurrentWordByTime(myAudio.currentTime);
-        if (currWordID != -1) {
-            let word = document.getElementById("word-" + currWordID);
-            let parent = word.parentNode;            
-
-            word.classList.add("word-active");
-            parent.classList.add("line-active");
-
-            // Bôi đen tất cả các từ trước đó trong dòng này
-            for (let i = 0; i < parent.children.length; i++) {
-                if(parent.children[i] == word) break;
-                parent.children[i].classList.add("word-active");
-            }
-
-            // scroll
-            if(word == parent.childNodes[0] && word.innerText.trim() != "") {
-                scrollLyric();
-            }
-        }
-    }
-
-    function scrollLyric(currWord=null) {
-        if(currWord == null) {
-            currWord = document.getElementById("word-" + currWordID);
-        }
-        div_result.scrollTop = currWord.offsetTop - document.getElementById("word-0").offsetTop - div_result.offsetHeight/2 + 20;
-    }
-
-    /**
-     * get the word base on a time, using binary search
-     * Node: offsetTime will be added in this place
-     * @param {float} Current time of audio in second
-     * @return {Integer} id of word
-     **/
-    function getCurrentWordByTime(sec) {
-        let lo = 0, hi = cntWord-1;
-        let mid, st, en;
-
-        while(lo <= hi) {
-            mid = parseInt((lo+hi)/2);
-            st = startTimes[mid] + offsetTime/1000;
-            en = endTimes[mid] + offsetTime/1000;
-
-            if(st <= sec && en >= sec) {
-                // fix lỗi CHÚ Ý [1]:
-                // Nếu như có 2 từ có khoảng thời gian bị chồng
-                // lên nhau thì ta ưu tiên từ đứng đằng sau
-                st = startTimes[mid+1] + offsetTime/1000;
-                en = endTimes[mid+1] + offsetTime/1000;
-                if(st <= sec && en >= sec) return mid+1;
-                else return mid;
-            }
-            else if (st > sec) hi = mid-1;
-            else lo = mid+1;
-        }
-
-        // ko tìm thấy thẻ nào có st <= sec <= en. tuy vậy, vẫn return thẻ gần đó nhất
-        console.log("Cannot found a tag that the value of \"sec\" is " +
-            "between its duration (st <= sec <= en). Return nearest tag: " + mid);
-        
-        // delete interval when finish song!
-        if (sec > endTimes[cntWord-1]) clearPlayLyricInterval();
-
-        return mid;
-    }
-
-    /**
-     * Convert time stamp to seconds
-     * @param {string} timestamp Lyrics time stamp, in format [2:17.88] or [1:03:45.32]
-     * @return {number} Time in seconds, float number
-     * Reference: https://github.com/guoyunhe/rabbit-lyrics/blob/master/src/index.js
-     */
-    function decodeTime(timestamp) {
-        if (!timestamp || typeof timestamp !== "string") return 0;
-        let results;
-
-        // [hh:mm:ss.xx] format, used by some long audio books
-        results = timestamp.match(/\[(\d+):(\d+):(\d+\.\d+)\]/);
-        if (results && results.length === 4) {
-            return parseFloat((
-                parseInt(results[1]) * 60 * 60 +
-                parseInt(results[2]) * 60 +
-                parseFloat(results[3])
-            ).toFixed(3));
-        }
-
-        // [mm:ss.xx] format, widely used for songs
-        // chú ý: regex này có 2 group: (\d+) và (\d+\.\d+)
-        // do đó results sẽ là 1 mảng chứa 2 group này
-        results = timestamp.match(/\[(\d+):(\d+\.\d+)\]/);
-        if (results && results.length === 3) {
-            return parseFloat((parseInt(results[1]) * 60 + parseFloat(results[2])).toFixed(3));
-        }
-
-        return 0;
-    }
-
-    /**
-     * create and return new element
-     * @param {string} tagName type of tag to create (ex: div, span, h1...)
-     * @param {string} id id of tag
-     * @param {string} classList list of classes for this tag
-     * @param {JSON} attributes list of attribute this tag
-     * @return {HTMLElement} element that be created
-     **/
-    function createNewElement(tagName, id, classList, attributes=null) {
-        let ele = document.createElement(tagName);
-
-        if (id != null && typeof id === "string" && id != "") {
-            ele.setAttribute("id", id);
-        }
-        if (classList != null && typeof classList === "string" && classList != "") {
-            ele.setAttribute("class", classList);
-        }
-        if (attributes != null && typeof attributes === "object") {
-            let key;
-            for (let i = 0; i < Object.keys(attributes).length; i++) {
-                ele.setAttribute(Object.keys(attributes)[i], attributes[Object.keys(attributes)[i]]);
-            }
-        }
-
-        return ele;
-    }
-</script>
 </html>
