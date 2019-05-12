@@ -2,16 +2,16 @@ body {
     font-family: -apple-system, BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
 }
 a {
-    color: #00B222;
+    color: #00B222 !important;
     text-decoration: none;
 }
 a:hover {
-    color: #00B222;
+    color: #00B222 !important;
     text-decoration: underline;
 }
 .div-header {
-    color: #2199F9;
-    font-size: 25px;
+    font-size: 24px;
     font-weight: bold;
-    padding: 0 10px;
+    margin: 10px 0;
+    color: #2199F9;
 }
