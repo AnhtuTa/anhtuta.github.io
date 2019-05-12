@@ -132,8 +132,8 @@ function addAudioEvent() {
         clearCountdownInterval();
         if(playLyricInterval == null) {
             updateLyric();
-            scrollLyric();
         }
+        scrollLyric();
     }
     myAudio.onpause = function() {
         clearCountdownInterval();

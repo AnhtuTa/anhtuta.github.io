@@ -7,6 +7,7 @@ var btn_toggle_setting = getByClass("btn_toggle_setting");
 var btn_sync_wrapper = getByClass("btn_sync_wrapper");
 var hide_when_fullscreen = getById("hide_when_fullscreen");
 var div_background = getById("div_background");
+var lilianaLyric = getByClass("liliana-lyric");
 var words = [];
 var startTimes = [];
 var endTimes = [];
@@ -79,6 +80,11 @@ div_result.addEventListener("dblclick", function() {
         btn_sync_wrapper.style.display = "";
         hide_when_fullscreen.style.display = "";
         div_background.classList.remove("bg-image-fullscreen");
+
+        scrollPage(myAudio, 300);
+        setTimeout(() => {
+            scrollLyric();
+        }, 350)
     } else {
         div_result.classList.add("lyric_fullscreen");
         div_result.classList.remove("lyric_normal");
@@ -88,6 +94,10 @@ div_result.addEventListener("dblclick", function() {
         btn_sync_wrapper.style.display = "none";
         hide_when_fullscreen.style.display = "none";
         div_background.classList.add("bg-image-fullscreen");
+
+        setTimeout(() => {
+            scrollLyric();
+        }, 350)
     }
 });
 
@@ -235,16 +245,22 @@ function isNoLyric() {
 }
 
 function initLyric() {
+    lyric_playground.style.display = "";
+
+    let fileName = getRequestParam("file");
+    if(!fileName || fileName.trim() === "") {
+        // Nếu người dùng ko truyền param fileName trên URL thì ta đọc lyric từ textarea
+        if(liliana_lyric.value.trim() !== "") {
+            words = liliana_lyric.value.trim().split("\n");
+        } else {
+            words = [];
+        }
+    }
+    if(isNoLyric()) return;
+
     cntWord = 0;
     offsetTime = 0;
     currWordID = -1;
-    lyric_playground.style.display = "";
-
-    let file = getRequestParam("file");
-    if(!file || file.trim() === "") {
-        words = liliana_lyric.value.trim().split("\n");
-    }
-    if(isNoLyric()) return;
     div_background.style.backgroundImage = "url('" + getById("art").src + "')";
 
     var temp, startLine, wordsInLine, startWord, endWord;
@@ -298,7 +314,7 @@ function initLyric() {
     if(btnResetAudio) btnResetAudio.style.display = "none";
     initSettings();
 
-    scrollPage(getById("myAudio"), 500);
+    scrollPage(myAudio, 500);
 }
 
 function initSettings() {
@@ -488,4 +504,17 @@ function getCurrentWordByTime(sec) {
     if (sec > endTimes[cntWord-1]) clearPlayLyricInterval();
 
     return mid;
+}
+
+function loadLyric(elem, event) {
+    // Có thể dùng tham số event để đọc:
+    //var file = event.target.files[0];
+    var file = elem.files[0];
+    if(file == undefined) return;
+
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        lilianaLyric.value = e.target.result;
+    };
+    reader.readAsText(file);
 }

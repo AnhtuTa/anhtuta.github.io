@@ -21,8 +21,10 @@
             <div id="select_mp3_from_local">
                 <div class="all-song-label">Want to play local song? Using this</div>
                 <textarea class="liliana-lyric custom-scrollbar" placeholder="Paste lyric here..."></textarea>
-                <div style="margin: 10px 0 5px 0;">Select an audio file to play</div>
-                <input id="btn_select_audio" style="margin: 5px 0 10px 0;" type="file" onchange="loadSong(this, event)" accept="audio/*">
+                <div class="song-input-title">Or select lyric file</div>
+                <input id="btn_select_lyric" class="song-input" type="file" onchange="loadLyric(this, event)" accept=".trc">
+                <div class="song-input-title">Select an audio file to play</div>
+                <input id="btn_select_audio" class="song-input" type="file" onchange="loadSong(this, event)" accept="audio/*">
                 <div id="btn_reset_audio">Reset</div>
             </div>
     

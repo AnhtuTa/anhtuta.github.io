@@ -19,10 +19,14 @@
 .div-res-album-bg .word-active {
     color: yellow;
 }
+.line {
+    margin: 5px 0;
+}
 .line-active {
-    margin: 10px 0;
+    margin: 10px 0 !important;
     transition: 0.2s;
-    font-size: 1.2em;
+    /* ko dùng nữa vì chữ bị nhảy xuống dòng khi active line */
+    /* font-size: 1.2em; */
     padding: 3px 7px;
     border-radius: 13px;
 }
@@ -139,12 +143,6 @@
 .btn_theme_album_bg:hover {
     border: 1px solid #fff;
 }
-@media only screen and (max-width: 700px) {
-    .body_wrapper {
-        padding: 0;
-        padding-bottom: 10px;
-    }
-}
 .lyric_normal {
     border: 1px solid #bababa;
     padding: 10px;
@@ -161,8 +159,8 @@
     bottom: 0;
     z-index: 9;
     margin: 0 !important;
-    font-size: 27px;
-    padding: 0 10%;
+    font-size: 1.5em;
+    padding: 0 4%;
     box-sizing: border-box;
 }
 .audio_normal {
@@ -288,4 +286,31 @@
 #lyric_playground {
     position: relative;
     height: calc(100% - 75px);  /*75px = height của tag audio */
+}
+.song-input-title {
+    margin: 10px 0 5px 0;
+}
+.song-input {
+    margin: 5px 0 10px 0;
+}
+
+/* Chú ý: các style sau PHẢI được định nghĩa ở trên rồi (áp dụng
+cho màn hình width > 700px) */
+@media only screen and (max-width: 700px) {
+    .body_wrapper {
+        padding: 0;
+        padding-bottom: 10px;
+    }
+    .lyric_fullscreen {
+        position: fixed !important;
+        top: 54px !important;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 9;
+        margin: 0 !important;
+        font-size: 1.2em;
+        padding: 0 4%;
+        box-sizing: border-box;
+    }
 }
