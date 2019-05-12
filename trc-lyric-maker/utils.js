@@ -94,7 +94,6 @@ function getRequestParam(parameterName) {
 // reference: https://github.com/aadsm/JavaScript-ID3-Reader
 function loadSong(elem, event) {
     var file = elem.files[0];
-    console.log("file: -_-", file);
     if(file == undefined) return;
 
     audio_wrapper.innerHTML = "";
