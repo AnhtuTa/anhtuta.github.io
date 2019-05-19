@@ -16,17 +16,13 @@ a:hover {
     color: #2199F9;
 }
 
+/* Downloaded from https://freefontsdownload.net/free-segoeuib-font-136420.htm */
 @font-face {
     font-family: "Segoe UI";
-    src: url("./fonts/Segoe UI.ttf");
-}
-@font-face {
-    font-family: "Segoe UI";
-    font-style: italic;
-    src: url("./fonts/Segoe UI Italic.ttf");
+    src: url("./fonts/segoeui.ttf");
 }
 @font-face {
     font-family: "Segoe UI";
     font-weight: bold;
-    src: url("./fonts/Segoe UI Bold.ttf");
+    src: url("./fonts/segoeuib.ttf");
 }
