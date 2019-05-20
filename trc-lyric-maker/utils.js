@@ -167,13 +167,22 @@ function loadUrl(url, callback, reader) {
         song_details.innerHTML = getSongDetails(tags);
         artist = tags.artist;
         title = tags.title;
+        var isAlbumPicExist = false;
+        var image;
+        var base64String = "";
 
         if( "picture" in tags ) {
-                var image = tags.picture;
-                var base64String = "";
-                for (var i = 0; i < image.data.length; i++) {
-                    base64String += String.fromCharCode(image.data[i]);
-                }
+            image = tags.picture;
+            for (var i = 0; i < image.data.length; i++) {
+                base64String += String.fromCharCode(image.data[i]);
+            }
+            if(base64String.trim() === "") isAlbumPicExist = false;
+            else isAlbumPicExist = true;
+        } else {
+            isAlbumPicExist = false;
+        }
+
+        if(isAlbumPicExist) {
             $("art").src = "data:" + image.format + ";base64," + window.btoa(base64String);
             $("art").style.display = "block";
         } else {
