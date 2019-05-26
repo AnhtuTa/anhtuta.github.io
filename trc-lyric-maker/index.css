@@ -1,0 +1,77 @@
+.body_wrapper {
+    padding: 0 10%;
+    padding-bottom: 30px;
+}
+.display-none {
+    display: none;
+}
+#input_lyric {
+    width: 100%;
+    height: 110px;
+    margin: 10px 0;
+    border-radius: 4px;
+    padding: 10px;
+    box-sizing: border-box;
+    resize: vertical;
+    font-family: "Segoe UI";
+}
+#div_result {
+    max-height: 60%;
+    overflow: auto;
+    border: 1px solid #bababa;
+    padding: 10px;
+    margin: 10px 0;
+    font-family: "Segoe UI";
+    scroll-behavior: smooth;
+}
+#div_result:focus {
+    border: 1px solid #2196F3;
+}
+.passed_word {
+    background: #ececec;
+    color: #bcbcbc;
+}
+.bigger_word {
+    /* font-size: 1.3em; */
+    color: #ff0000;
+    font-weight: bold;
+}
+.finish_word {
+    color: #0600ff;
+    font-weight: bold;
+}
+#audio_wrapper audio {
+    width: 80%;
+    margin: 10px 0;
+}
+#song_details {
+    margin: 10px 0;
+}
+.btn {
+    background: #2196f3;
+    padding: 6px;
+    color: #fff;
+    border-radius: 3px;
+    display: inline-block;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-bottom: 10px;
+    border: 0;
+}
+.btn:hover {
+    background: #0077d5;
+}
+.btn:disabled {
+    background: #d9d9d9;
+    color: #808080;
+    cursor: auto;
+}
+.btn:focus {
+    background: #33b002;
+}
+@media only screen and (max-width: 700px) {
+    .body_wrapper {
+        padding: 0;
+        padding-bottom: 10px;
+    }
+}
