@@ -16,9 +16,6 @@
     color: #41BDFF;
     transition: .2s;
 }
-.div-res-album-bg .word-active {
-    color: yellow;
-}
 .line {
     margin: 5px 0;
 }
@@ -229,7 +226,7 @@
 }
 .div-res-album-bg .curr-word {
     font-weight: bold;
-    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
 }
 .setting_seperator {
     color: #737373;
