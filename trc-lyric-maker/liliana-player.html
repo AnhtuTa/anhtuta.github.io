@@ -11,10 +11,10 @@
 </head>
 <body>
 <div class="body_wrapper">
-    <div style="/*border: 2px solid #2196F3;*/">
+    <div>
         <div id="hide_when_fullscreen">
             <a href="./liliana-player.html" class="div-header" title="Home">Liliana Player</a>
-            <div style="font-size: 16px;color: #888888;margin: 10px 0;">Posted on: 29/1/2019. Last modified: 8/5/2019</div>
+            <div style="font-size: 16px;color: #888888;margin: 10px 0;">Posted on: 29/1/2019. Last modified: 16/7/2019</div>
     
             <div id="all_songs"></div>
     
@@ -35,8 +35,17 @@
         <div id="audio_wrapper" class="audio_normal"></div>
         
         <div id="lyric_playground" style="display: none;">
-            <div id="div_background" style="display: none;" class="bg-image"></div>
-            <div id="div_result" class="lyric_normal custom-scrollbar div-res-light" style="text-align: center;" class="custom-scrollbar"></div>
+            <div id="div_left_wrapper" class="left_normal">
+                <img class="left_img spinning" src="tuta1.jpg" />
+                <div class="left_info">
+                    <div class="left_title">This is title</div>
+                    <div class="left_artist">This is artist</div>
+                    <div class="left_album">This is album</div>
+                </div>
+            </div>
+            <!-- Note: nếu ko dùng div-res-album-bg thì phải cần cái này: style="display: none;"  -->
+            <div id="div_background" class="bg-image"></div>
+            <div id="div_result" class="lyric_normal custom-scrollbar div-res-album-bg show-left-normal" style="text-align: center;" class="custom-scrollbar"></div>
             <div class="btn_sync_wrapper">
                 <div class="btn_toggle_setting" title="Settings">
                     <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
@@ -50,8 +59,12 @@
                     <i class="fa fa-align-right btn_align btn_align_right"  title="Lyric right alignment"></i><br>
                     <i class="fa fa-square btn_theme btn_theme_dark" title="Dark theme"></i>
                     <i class="fa fa-square btn_theme btn_theme_light" title="Light theme"></i>
-                    <i class="fa fa-home btn_theme btn_theme_album_bg" title="Album background theme"></i>
+                    <i class="fa fa-home btn_theme btn_theme_album_bg" title="Album background theme"></i><br>
+                    <i class="fa fa-search-plus btn_theme btn_gigantic_line" aria-hidden="true" title="Gigantic line"></i>
                 </div>
+            </div>
+            <div class="setting_bottom">
+                <i class="fa fa-arrows-alt btn_align btn_fullscreen" aria-hidden="true"></i>
             </div>
             <div style="clear: both;"></div>
         </div>

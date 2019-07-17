@@ -8,11 +8,17 @@ var btn_sync_wrapper = getByClass("btn_sync_wrapper");
 var hide_when_fullscreen = getById("hide_when_fullscreen");
 var div_background = getById("div_background");
 var lilianaLyric = getByClass("liliana-lyric");
+var btn_fullscreen = getByClass("btn_fullscreen");
+var setting_bottom = getByClass("setting_bottom");
+var left_img = getByClass("left_img");
+var left_title = getByClass("left_title");
+var left_artist = getByClass("left_artist");
+var left_album = getByClass("left_album");
 var words = [];
 var startTimes = [];
 var endTimes = [];
 var myAudio;
-var title, artist;
+var title, artist, album;
 var lyricFile;
 
 // offset time in milisecond
@@ -61,6 +67,15 @@ getByClass("btn_theme_album_bg").addEventListener("click", function() {
     changeTheme("div-res-album-bg", "");
     saveSettings("theme", "album-bg");
 });
+getByClass("btn_gigantic_line").addEventListener("click", function() {
+    if(div_result.classList.contains("div-res-big-active-line")) {
+        div_result.classList.remove("div-res-big-active-line");
+        saveSettings("giganticLine", false);
+    } else {
+        div_result.classList.add("div-res-big-active-line");
+        saveSettings("giganticLine", true);
+    }
+});
 getById("btn_reset_audio").addEventListener("click", function() {
     getById("btn_select_audio").value = "";
 });
@@ -70,36 +85,56 @@ div_result.addEventListener("click", function() {
     // btn_toggle_setting.style.display = "";
     // setting_wrapper.style.display = "none";
 });
-div_result.addEventListener("dblclick", function() {
+btn_fullscreen.addEventListener("click", function() {
     if(div_result.classList.contains("lyric_fullscreen")) {
-        div_result.classList.add("lyric_normal");
-        div_result.classList.remove("lyric_fullscreen");
-        audio_wrapper.classList.add("audio_normal");
-        audio_wrapper.classList.remove("audio_fullscreen");
-        document.body.classList.remove("overflow-hidden");
-        btn_sync_wrapper.style.display = "";
-        hide_when_fullscreen.style.display = "";
-        div_background.classList.remove("bg-image-fullscreen");
-
-        scrollPage(myAudio, 300);
-        setTimeout(() => {
-            scrollLyric();
-        }, 350)
+        setLyricNormal();
+        saveSettings("fullscreen", false);
     } else {
-        div_result.classList.add("lyric_fullscreen");
-        div_result.classList.remove("lyric_normal");
-        audio_wrapper.classList.add("audio_fullscreen");
-        audio_wrapper.classList.remove("audio_normal");
-        document.body.classList.add("overflow-hidden");
-        btn_sync_wrapper.style.display = "none";
-        hide_when_fullscreen.style.display = "none";
-        div_background.classList.add("bg-image-fullscreen");
-
-        setTimeout(() => {
-            scrollLyric();
-        }, 350)
+        setLyricFullscreen();
+        saveSettings("fullscreen", true);
     }
 });
+
+function setLyricNormal() {
+    div_result.classList.add("lyric_normal");
+    div_result.classList.remove("lyric_fullscreen");
+    div_result.classList.add("show-left-normal");
+    div_result.classList.remove("show-left-fs");
+    audio_wrapper.classList.add("audio_normal");
+    audio_wrapper.classList.remove("audio_fullscreen");
+    document.body.classList.remove("overflow-hidden");
+    btn_sync_wrapper.style.display = "";
+    hide_when_fullscreen.style.display = "";
+    div_background.classList.remove("bg-image-fullscreen");
+    setting_bottom.classList.remove("setbot_fs");
+    div_left_wrapper.classList.remove("left_fs");
+    div_left_wrapper.classList.add("left_normal");
+
+    scrollPage(myAudio, 300);
+    setTimeout(() => {
+        scrollLyric();
+    }, 350)
+}
+
+function setLyricFullscreen() {
+    div_result.classList.add("lyric_fullscreen");
+    div_result.classList.remove("lyric_normal");
+    div_result.classList.add("show-left-fs");
+    div_result.classList.remove("show-left-normal");
+    audio_wrapper.classList.add("audio_fullscreen");
+    audio_wrapper.classList.remove("audio_normal");
+    document.body.classList.add("overflow-hidden");
+    btn_sync_wrapper.style.display = "none";
+    hide_when_fullscreen.style.display = "none";
+    div_background.classList.add("bg-image-fullscreen");
+    setting_bottom.classList.add("setbot_fs");
+    div_left_wrapper.classList.add("left_fs");
+    div_left_wrapper.classList.remove("left_normal");
+
+    setTimeout(() => {
+        scrollLyric();
+    }, 350)
+}
 
 function changeTheme(themeClass, bgImageDisplay) {
     let classes = div_result.classList;
@@ -132,6 +167,9 @@ function startPage() {
         if(vol) audio.volume = vol;
 
         addAudioEvent();
+        // Cannot play audio tag when page is loaded! We must click to do something
+        // with the screen first, and then this method will work
+        // myAudio.play();
 
         // -_- try to get blob from ajax, so we can display song's image
         var xhr = new XMLHttpRequest();
@@ -312,15 +350,18 @@ function initLyric() {
     
     let btnResetAudio = getById("btn_reset_audio");
     if(btnResetAudio) btnResetAudio.style.display = "none";
-    initSettings();
+    initSettingsAtPlayer();
 
     scrollPage(myAudio, 500);
 }
 
-function initSettings() {
+function initSettingsAtPlayer() {
     let lyricAlign = getSetting("lyricAlign");
     if(lyricAlign) div_result.style.textAlign = lyricAlign;
-    
+
+    let isFullscreen = getSetting("fullscreen");
+    if(isFullscreen) setLyricFullscreen();
+
     let theme = getSetting("theme");
     if(theme) {
         let classes;
@@ -338,6 +379,9 @@ function initSettings() {
                 break;
         }
     }
+
+    let giganticLine = getSetting("giganticLine");
+    if(giganticLine) div_result.classList.add("div-res-big-active-line");
 }
 
 function initSettingsAtHomePage() {
@@ -365,6 +409,9 @@ function updateLyric() {
     }
 
     let prevWord, prevParent, currWord, currParent;
+
+    // PHẢI FIX XONG CÁI BUG NÀY!
+    //console.log(countdownInterval);
 
     if (currWordID >= 0) {
         let st = startTimes[currWordID] + offsetTime/1000;

@@ -1,5 +1,8 @@
+body {
+    background: #f1f3f4;
+}
 .body_wrapper {
-    padding: 0 10%;
+    padding: 0 8%;
     padding-bottom: 10px;
 }
 .liliana-lyric {
@@ -16,22 +19,30 @@
     color: #41BDFF;
     transition: .2s;
 }
+.word-active:first-child {
+    transition: 0s !important;
+}
 .line {
     margin: 5px 0;
+    padding: 0 10px;
 }
 .line-active {
     margin: 10px 0 !important;
-    transition: 0.2s;
+    transition: 0.1s;
     /* ko dùng nữa vì chữ bị nhảy xuống dòng khi active line */
     /* font-size: 1.2em; */
-    padding: 3px 7px;
-    border-radius: 13px;
+    /* padding: 3px 7px; */
+    /* border-radius: 13px; */
+}
+.div-res-big-active-line .line-active {
+    font-size: 2.3em;
 }
 #div_result {
     overflow: auto;
     scroll-behavior: smooth;
     transition: 0.4s;
     padding-bottom: 30px;
+    font-size: 22px;
 }
 
 /* Dark theme */
@@ -41,14 +52,14 @@
 }
 .div-res-dark .line-active {
     color: #fff;
-    background: #4c4c4c;
+    /* background: #4c4c4c; */
     font-weight: bold;
 }
 
 /* Light theme */
 .div-res-light .line-active {
     color: #575757;
-    background: #e8e8e8;
+    /* background: #e8e8e8; */
     font-weight: bold;
 }
 
@@ -58,7 +69,7 @@
 }
 .div-res-album-bg .line-active {
     color: #fff;
-    background: #4c4c4c69;
+    /* background: #4c4c4c69; */
     font-weight: bold;
 }
 
@@ -156,7 +167,7 @@
     bottom: 0;
     z-index: 9;
     margin: 0 !important;
-    font-size: 1.5em;
+    font-size: 27px !important;
     padding: 0 4%;
     box-sizing: border-box;
 }
@@ -189,8 +200,8 @@
 	/* background-image: url("background.jpg"); */
 
 	/* Add the blur effect */
-	filter: blur(3px);
-	-webkit-filter: blur(3px);
+	filter: blur(4px);
+	-webkit-filter: blur(4px);
 
 	/* Full height */
 	height: 100%;
@@ -210,7 +221,7 @@
 
 /* Position text in the middle of the page/image */
 .div-res-album-bg {
-    background-color: rgba(0,0,0, 0.2);
+    background-color: rgba(0,0,0, 0.4);
     position: absolute;
     top: 0;
     left: 0;
@@ -234,6 +245,7 @@
     position: relative;
     top: -3px;
     font-size: 18px;
+    font-style: normal;
 }
 .song_title, .song_artist {
     color: #2199F9;
@@ -269,7 +281,7 @@
     border-top: 1px solid #ddd;
 } */
 .table_striped>tr>td {
-    padding: 5px;
+    padding: 6px;
 }
 .table_striped>tr>td:first-child {
     text-align: right;
@@ -290,7 +302,89 @@
 .song-input {
     margin: 5px 0 10px 0;
 }
+.setting_bottom {
+    position: absolute;
+    bottom: 5px;
+    right: 15px;
+    z-index: 10;
+}
+.setbot_fs {
+    position: fixed !important;
+    opacity: 0.4;
+}
+.setbot_fs:hover {
+    opacity: 1;
+}
+.left_normal {
+    position: absolute;
+    top: calc(50% - 200px);
+    left: 50px;
+    z-index: 11;
+    text-align: center;
+}
+.left_title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 5px 0;
+    margin-top: 10px;
+    color: #fff;
+    text-shadow: -1px -1px 0 #2199F9, 1px -1px 0 #2199F9, -1px 1px 0 #2199F9, 1px 1px 0 #2199F9;
+}
+.left_artist {
+    font-size: 18px;
+    margin: 5px 0;
+    color: #cdcdcd;
+}
+.left_album {
+    font-size: 18px;
+    margin: 5px 0;
+    color: #cdcdcd;
+}
+.show-left-normal {
+    padding-left: 350px;
+}
+.show-left-fs {
+    padding-left: 400px;
+}
 
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+.spinning {
+    -webkit-animation:spin 10s linear infinite;
+    -moz-animation:spin 10s linear infinite;
+    animation:spin 10s linear infinite;
+}
+.paused-spin {
+    animation-play-state: paused;
+    -webkit-animation-play-state: paused;
+}
+.left_fs {
+    position: fixed;
+    top: calc(50% - 200px);
+    left: 50px;
+    z-index: 11;
+    text-align: center;
+}
+.left_normal .left_img {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.left_normal .left_title, .left_normal .left_artist, .left_normal .left_album {
+    width: 250px;   /* equal to left_img's width */
+}
+.left_fs .left_img {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.left_fs .left_title, .left_fs .left_artist, .left_fs .left_album {
+    width: 300px;   /* equal to left_img's width */
+}
+  
 /* Chú ý: các style sau PHẢI được định nghĩa ở trên rồi (áp dụng
 cho màn hình width > 700px) */
 @media only screen and (max-width: 700px) {
@@ -309,5 +403,14 @@ cho màn hình width > 700px) */
         font-size: 1.2em;
         padding: 0 4%;
         box-sizing: border-box;
+    }
+    #div_left_wrapper {
+        display: none;
+    }
+    .show-left-normal {
+        padding-left: 0;
+    }
+    .show-left-fs {
+        padding-left: 0;
     }
 }

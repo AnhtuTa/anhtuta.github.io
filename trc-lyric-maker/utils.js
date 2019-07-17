@@ -127,6 +127,7 @@ function addAudioEvent() {
         }
 
         if(playLyricInterval == null) setPlayLyricInterval();
+        left_img.classList.remove("paused-spin");
     }
     myAudio.onseeked = function() {
         clearCountdownInterval();
@@ -138,6 +139,7 @@ function addAudioEvent() {
     myAudio.onpause = function() {
         clearCountdownInterval();
         if(playLyricInterval != null) clearPlayLyricInterval();
+        left_img.classList.add("paused-spin");
     }
     myAudio.onvolumechange = function() {
         saveSettings("volume", myAudio.volume);
@@ -145,17 +147,22 @@ function addAudioEvent() {
 }
 
 function clearCountdownInterval() {
-    if(countdownInterval != null) {
-        clearInterval(countdownInterval);
-        countdownInterval = null;
-        if(currCountdownWord) currCountdownWord.innerHTML = "&nbsp;";
-    }
+    clearInterval(countdownInterval);
+    countdownInterval = null;
+    if(currCountdownWord) currCountdownWord.innerHTML = "&nbsp;";
 }
 
 function getSongDetails(json) {
-    return "<div class='song_title'>" + (json.title && json.title.trim() ? json.title : "No title") + "&nbsp;-&nbsp;</div>" +
-    "<div class='song_artist'>" + (json.artist && json.artist.trim() ? json.artist : "No artist") + "</div>" +
-    "<div class='song_album'>(" + (json.album && json.album.trim() !== "" ? json.album : "No album") + ")</div>";
+    title = json.title && json.title.trim() ? json.title : "No title";
+    artist = json.artist && json.artist.trim() ? json.artist : "No artist";
+    album = json.album && json.album.trim() !== "" ? json.album : "No album";
+
+    left_title.innerText = title;
+    left_artist.innerText = artist;
+    left_album.innerHTML = "Album: " + album;
+    return "<div class='song_title'>" + title + "&nbsp;-&nbsp;</div>" +
+    "<div class='song_artist'>" + artist + "</div>" +
+    "<div class='song_album'>(" + album + ")</div>";
 }
 
 function loadUrl(url, callback, reader) {
@@ -165,8 +172,7 @@ function loadUrl(url, callback, reader) {
         var tags = ID3.getAllTags(url);
 
         song_details.innerHTML = getSongDetails(tags);
-        artist = tags.artist;
-        title = tags.title;
+        
         var isAlbumPicExist = false;
         var image;
         var base64String = "";
@@ -186,11 +192,14 @@ function loadUrl(url, callback, reader) {
             $("art").src = "data:" + image.format + ";base64," + window.btoa(base64String);
             $("art").style.display = "block";
         } else {
-            let ran = Math.floor((Math.random() * 3));
-            if(ran === 0) $("art").src = "background.jpg";
-            else $("art").src = "background" + ran + ".jpg";
+            // let ran = Math.floor((Math.random() * 3));
+            // if(ran === 0) $("art").src = "background.jpg";
+            // else $("art").src = "background" + ran + ".jpg";
+            //$("art").src = "background.jpg";
+            $("art").src = "background.jpg";
             $("art").style.display = "none";
         }
+        left_img.src = $("art").src;
 
         if( callback ) { callback(); };
     },
