@@ -42,7 +42,7 @@ body {
     scroll-behavior: smooth;
     transition: 0.4s;
     padding-bottom: 30px;
-    font-size: 22px;
+    font-size: 25px;
 }
 
 /* Dark theme */
@@ -167,7 +167,7 @@ body {
     bottom: 0;
     z-index: 9;
     margin: 0 !important;
-    font-size: 27px !important;
+    font-size: 30px !important;
     padding: 0 4%;
     box-sizing: border-box;
 }
