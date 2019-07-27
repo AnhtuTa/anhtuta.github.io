@@ -20,7 +20,7 @@ body {
     transition: .2s;
 }
 .word-active:first-child {
-    transition: 0s !important;
+    /* transition: 0s !important; */
 }
 .line {
     margin: 5px 0;
@@ -43,6 +43,7 @@ body {
     transition: 0.4s;
     padding-bottom: 30px;
     font-size: 25px;
+    /* -webkit-mask-image: -webkit-linear-gradient(top,hsla(0,0%,100%,0),hsla(0,0%,100%,.6) 6%,#fff 12%,#fff 86%,hsla(0,0%,100%,.6) 94%,hsla(0,0%,100%,0)); */
 }
 
 /* Dark theme */
@@ -154,7 +155,6 @@ body {
 .lyric_normal {
     border: 1px solid #bababa;
     padding: 10px;
-    float: left;
     width: 100%;
     box-sizing: border-box;
     height: 100%;
@@ -239,6 +239,10 @@ body {
     font-weight: bold;
     text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
 }
+/* style này ở dưới bọn .curr-word ở trên, do đó sẽ ghi đè text-shadow */
+.word-appear .curr-word {
+    text-shadow: none;
+}
 .setting_seperator {
     color: #737373;
     font-weight: bold;
@@ -317,7 +321,7 @@ body {
 }
 .left_normal {
     position: absolute;
-    top: calc(50% - 200px);
+    top: 50px;
     left: 50px;
     z-index: 11;
     text-align: center;
@@ -361,7 +365,7 @@ body {
 }
 .left_fs {
     position: fixed;
-    top: calc(50% - 200px);
+    top: 104px;
     left: 50px;
     z-index: 11;
     text-align: center;
@@ -384,7 +388,20 @@ body {
 .left_fs .left_title, .left_fs .left_artist, .left_fs .left_album {
     width: 300px;   /* equal to left_img's width */
 }
-  
+.word-appear {
+    padding-bottom: 40% !important;
+}
+.word-appear .not-pass-word {
+    /* display: none; */
+    opacity: 0;
+    transition: opacity 0.5s linear;    /* 0.5s hay 10s nó vẫn transition như nhau, ko hiểu tại sao! */
+}
+
+.select_mp3_label {
+    cursor: pointer;
+    display: inline-block;
+}
+
 /* Chú ý: các style sau PHẢI được định nghĩa ở trên rồi (áp dụng
 cho màn hình width > 700px) */
 @media only screen and (max-width: 700px) {
@@ -412,5 +429,12 @@ cho màn hình width > 700px) */
     }
     .show-left-fs {
         padding-left: 0;
+    }
+}
+
+@media only screen and (max-width: 850px) {
+    .body_wrapper {
+        padding: 0 4%;
+        padding-bottom: 10px;
     }
 }

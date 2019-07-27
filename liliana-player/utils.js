@@ -134,6 +134,9 @@ function addAudioEvent() {
         if(playLyricInterval == null) {
             updateLyric();
         }
+        setTimeout(function() {
+            reUpdateWordPass();
+        }, 0);
         scrollLyric();
     }
     myAudio.onpause = function() {
@@ -143,6 +146,18 @@ function addAudioEvent() {
     }
     myAudio.onvolumechange = function() {
         saveSettings("volume", myAudio.volume);
+    }
+}
+
+function reUpdateWordPass() {
+    let currWordID = getCurrentWordByTime(myAudio.currentTime);
+    if(currWordID >= 0) {
+        for(let i = 0; i < currWordID; i++) {
+            getById("word-" + i).classList.remove("not-pass-word");
+        }
+        for(let i = currWordID; i < cntWord; i++) {
+            getById("word-" + i).classList.add("not-pass-word");
+        }
     }
 }
 

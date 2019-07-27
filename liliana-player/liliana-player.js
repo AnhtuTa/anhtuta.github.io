@@ -14,6 +14,8 @@ var left_img = getByClass("left_img");
 var left_title = getByClass("left_title");
 var left_artist = getByClass("left_artist");
 var left_album = getByClass("left_album");
+var select_mp3_label = getByClass("select_mp3_label");
+var select_mp3_wrapper = getByClass("select_mp3_wrapper");
 var words = [];
 var startTimes = [];
 var endTimes = [];
@@ -43,30 +45,44 @@ btn_toggle_setting.addEventListener("click", function() {
     $("#setting_wrapper").show(100);
     //setting_wrapper.style.display = "";
 });
+
 getByClass("btn_align_left").addEventListener("click", function() {
-    div_result.style.textAlign = "left";
-    saveSettings("lyricAlign", "left");
+    settingLyricAlign("left");
 });
 getByClass("btn_align_center").addEventListener("click", function() {
-    div_result.style.textAlign = "center";
-    saveSettings("lyricAlign", "center");
+    settingLyricAlign("center");
 });
 getByClass("btn_align_right").addEventListener("click", function() {
-    div_result.style.textAlign = "right";
-    saveSettings("lyricAlign", "right");
+    settingLyricAlign("right");
 });
+function settingLyricAlign(align) {
+    div_result.style.textAlign = align;
+    saveSettings("lyricAlign", align);
+}
+
 getByClass("btn_theme_dark").addEventListener("click", function() {
-    changeTheme("div-res-dark", "none");
-    saveSettings("theme", "dark");
+    settingThemeDark();
 });
 getByClass("btn_theme_light").addEventListener("click", function() {
-    changeTheme("div-res-light", "none");
-    saveSettings("theme", "light");
+    settingThemeLight();
 });
 getByClass("btn_theme_album_bg").addEventListener("click", function() {
-    changeTheme("div-res-album-bg", "");
-    saveSettings("theme", "album-bg");
+    settingThemeAlbumBg();
 });
+function settingThemeDark() {
+    settingTheme("div-res-dark", "none", "dark");
+}
+function settingThemeLight() {
+    settingTheme("div-res-light", "none", "light");
+}
+function settingThemeAlbumBg() {
+    settingTheme("div-res-album-bg", "", "album-bg");
+}
+function settingTheme(themeClass, bgImageDisplay, themeKey) {
+    changeTheme(themeClass, bgImageDisplay);
+    saveSettings("theme", themeKey);
+}
+
 getByClass("btn_gigantic_line").addEventListener("click", function() {
     if(div_result.classList.contains("div-res-big-active-line")) {
         div_result.classList.remove("div-res-big-active-line");
@@ -76,6 +92,26 @@ getByClass("btn_gigantic_line").addEventListener("click", function() {
         saveSettings("giganticLine", true);
     }
 });
+getByClass("btn_word_appear").addEventListener("click", function() {
+    settingWordAppear(false);
+});
+function settingWordAppear(isForce) {
+    if(isForce) {
+        // set word appear, no matter what
+        div_result.classList.add("word-appear");
+        saveSettings("wordAppear", true);
+    } else {
+        // toggle
+        if(div_result.classList.contains("word-appear")) {
+            div_result.classList.remove("word-appear");
+            saveSettings("wordAppear", false);
+        } else {
+            div_result.classList.add("word-appear");
+            saveSettings("wordAppear", true);
+        }
+    }
+}
+
 getById("btn_reset_audio").addEventListener("click", function() {
     getById("btn_select_audio").value = "";
 });
@@ -92,6 +128,22 @@ btn_fullscreen.addEventListener("click", function() {
     } else {
         setLyricFullscreen();
         saveSettings("fullscreen", true);
+    }
+});
+left_img.addEventListener("click", function() {
+    if(left_img.classList.contains("paused-spin")) {
+        left_img.classList.remove("paused-spin");
+    } else {
+        left_img.classList.add("paused-spin");
+    }
+});
+
+select_mp3_label.addEventListener("click", function() {
+    if(select_mp3_wrapper.style.display === "none") {
+        select_mp3_wrapper.style.display = "";
+        scrollPage(getByClass("liliana-lyric"), 300);
+    } else {
+        select_mp3_wrapper.style.display = "none";
     }
 });
 
@@ -136,6 +188,10 @@ function setLyricFullscreen() {
     }, 350)
 }
 
+/**
+ * Note: Class theme sẽ bắt đầu = "div-res-"
+ * Do đó những class ko liên quan đến theme KO được bắt đầu = "div-res-"
+ */
 function changeTheme(themeClass, bgImageDisplay) {
     let classes = div_result.classList;
     classes.forEach(className => {
@@ -145,10 +201,39 @@ function changeTheme(themeClass, bgImageDisplay) {
     div_background.style.display = bgImageDisplay;
 }
 
+function settingUIUsingParams() {
+    let lyricAlign = getRequestParam("lyricAlign");
+    if(lyricAlign && lyricAlign.trim() !== "") {
+        settingLyricAlign(lyricAlign);
+    }
+
+    let theme = getRequestParam("theme");
+    if(theme && theme.trim() !== "") {
+        switch(theme) {
+            case "dark":
+                settingThemeDark();
+                break;
+            case "light":
+                settingThemeLight();
+                break;
+            case "albumBg":
+                settingThemeAlbumBg();
+                break;
+            default:
+                // do nothing
+                break;
+        }
+    }
+
+    let wordAppear = getRequestParam("wordAppear");
+    if(wordAppear && wordAppear.trim() === "true") {
+        settingWordAppear(true);
+    }
+}
+
 function startPage() {
     let file = getRequestParam("file");
     if(file && file.trim() !== "") {
-        let select_mp3_from_local = getById("select_mp3_from_local");
         select_mp3_from_local.parentElement.removeChild(select_mp3_from_local);
 
         let songURL = HOST_API + "/api/song?file=" + file;
@@ -182,6 +267,9 @@ function startPage() {
         xhr.open('GET', songURL);
         xhr.responseType = 'blob';
         xhr.send();
+
+        // using param to setting UI
+        settingUIUsingParams();
     } else {
         // show all available songs
         let urlAllSongs = HOST_API + "/api/song/all/by/folder";
@@ -312,6 +400,7 @@ function initLyric() {
 
             if(wordsInLine==null) {
                 let spanWord = createNewElement("span");
+                spanWord.setAttribute("class", "not-pass-word");
                 spanWord.innerText = temp;
                 if (spanWord.innerText == "") spanWord.innerHTML = "&nbsp";
                 divLine.appendChild(spanWord);
@@ -329,7 +418,7 @@ function initLyric() {
                 
                 // Do lưu time vào 2 mảng startTimes và endTimes nên có thể ko cần
                 // thêm attribute time-start và time-start nữa
-                let spanWord = createNewElement("span", "word-" + cntWord, "", {"time-start":startWord, "time-end": endWord});
+                let spanWord = createNewElement("span", "word-" + cntWord, "not-pass-word", {"time-start":startWord, "time-end": endWord});
                 spanWord.innerText = wordsInLine[j].replace(/<\d+>/, "");
                 if (spanWord.innerText == "") spanWord.innerHTML = "&nbsp";
                 startTimes[cntWord] = startWord;
@@ -382,6 +471,9 @@ function initSettingsAtPlayer() {
 
     let giganticLine = getSetting("giganticLine");
     if(giganticLine) div_result.classList.add("div-res-big-active-line");
+
+    let wordAppear = getSetting("wordAppear");
+    if(wordAppear) div_result.classList.add("word-appear");
 }
 
 function initSettingsAtHomePage() {
@@ -433,6 +525,7 @@ function updateLyric() {
         currParent = currWord.parentNode;
 
         currWord.classList.add("word-active", "curr-word");
+        currWord.classList.remove("not-pass-word");
 
         if (prevParent != currParent) {
             if (prevParent != null) {

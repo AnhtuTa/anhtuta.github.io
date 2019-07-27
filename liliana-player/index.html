@@ -13,19 +13,21 @@
 <div class="body_wrapper">
     <div>
         <div id="hide_when_fullscreen">
-            <a href="./liliana-player.html" class="div-header" title="Home">Liliana Player</a>
-            <div style="font-size: 16px;color: #888888;margin: 10px 0;">Posted on: 29/1/2019. Last modified: 16/7/2019</div>
+            <a href="./index.html" class="div-header" title="Home">Liliana Player</a>
+            <div style="font-size: 16px;color: #888888;margin: 10px 0;">Posted on: 29/1/2019. Last modified: 27/7/2019</div>
     
             <div id="all_songs"></div>
     
             <div id="select_mp3_from_local">
-                <div class="all-song-label">Want to play local song? Using this</div>
-                <textarea class="liliana-lyric custom-scrollbar" placeholder="Paste lyric here..."></textarea>
-                <div class="song-input-title">Or select lyric file</div>
-                <input id="btn_select_lyric" class="song-input" type="file" onchange="loadLyric(this, event)" accept=".trc">
-                <div class="song-input-title">Select an audio file to play</div>
-                <input id="btn_select_audio" class="song-input" type="file" onchange="loadSong(this, event)" accept="audio/*">
-                <div id="btn_reset_audio">Reset</div>
+                <div class="all-song-label select_mp3_label">Want to play local song? Using this</div>
+                <div class="select_mp3_wrapper" style="display: none">
+                    <textarea class="liliana-lyric custom-scrollbar" placeholder="Paste lyric here..."></textarea>
+                    <div class="song-input-title">Or select lyric file</div>
+                    <input id="btn_select_lyric" class="song-input" type="file" onchange="loadLyric(this, event)" accept=".trc">
+                    <div class="song-input-title">Select an audio file to play</div>
+                    <input id="btn_select_audio" class="song-input" type="file" onchange="loadSong(this, event)" accept="audio/*">
+                    <div id="btn_reset_audio">Reset</div>
+                </div>
             </div>
     
             <div id="song_details"></div>
@@ -36,15 +38,17 @@
         
         <div id="lyric_playground" style="display: none;">
             <div id="div_left_wrapper" class="left_normal">
-                <img class="left_img spinning" src="background.jpg" />
+                <img style="cursor: pointer" class="left_img spinning" src="background.jpg" />
                 <div class="left_info">
                     <div class="left_title">This is title</div>
                     <div class="left_artist">This is artist</div>
                     <div class="left_album">This is album</div>
                 </div>
             </div>
-            <!-- Note: nếu ko dùng div-res-album-bg thì phải cần cái này: style="display: none;"  -->
-            <div id="div_background" class="bg-image"></div>
+            <div style="overflow: hidden">
+                <!-- Note: nếu ko dùng div-res-album-bg thì phải cần cái này: style="display: none;"  -->
+                <div id="div_background" class="bg-image"></div>
+            </div>
             <div id="div_result" class="lyric_normal custom-scrollbar div-res-album-bg show-left-normal" style="text-align: center;" class="custom-scrollbar"></div>
             <div class="btn_sync_wrapper">
                 <div class="btn_toggle_setting" title="Settings">
@@ -60,6 +64,7 @@
                     <i class="fa fa-square btn_theme btn_theme_dark" title="Dark theme"></i>
                     <i class="fa fa-square btn_theme btn_theme_light" title="Light theme"></i>
                     <i class="fa fa-home btn_theme btn_theme_album_bg" title="Album background theme"></i><br>
+                    <i class="fa fa-smile-o btn_theme btn_word_appear" aria-hidden="true" title="Word appears when time comes to it"></i>
                     <i class="fa fa-search-plus btn_theme btn_gigantic_line" aria-hidden="true" title="Gigantic line"></i>
                 </div>
             </div>
