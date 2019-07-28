@@ -41,7 +41,7 @@ body {
     overflow: auto;
     scroll-behavior: smooth;
     transition: 0.4s;
-    padding-bottom: 30px;
+    padding-bottom: 35%;
     font-size: 25px;
     /* -webkit-mask-image: -webkit-linear-gradient(top,hsla(0,0%,100%,0),hsla(0,0%,100%,.6) 6%,#fff 12%,#fff 86%,hsla(0,0%,100%,.6) 94%,hsla(0,0%,100%,0)); */
 }
@@ -388,9 +388,9 @@ body {
 .left_fs .left_title, .left_fs .left_artist, .left_fs .left_album {
     width: 300px;   /* equal to left_img's width */
 }
-.word-appear {
+/* .word-appear {
     padding-bottom: 40% !important;
-}
+} */
 .word-appear .not-pass-word {
     /* display: none; */
     opacity: 0;

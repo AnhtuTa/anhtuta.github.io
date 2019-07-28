@@ -128,6 +128,14 @@ function addAudioEvent() {
 
         if(playLyricInterval == null) setPlayLyricInterval();
         left_img.classList.remove("paused-spin");
+        if(myAudio.currentTime === 0) {
+            setTimeout(function() {
+                // reUpdateWordPass
+                for(let i = 0; i < cntWord; i++) {
+                    getById("word-" + i).classList.add("not-pass-word");
+                }
+            }, 0);
+        }
     }
     myAudio.onseeked = function() {
         clearCountdownInterval();
