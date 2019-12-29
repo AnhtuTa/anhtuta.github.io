@@ -264,6 +264,8 @@ function getFormattedPassTime(milisec) {
     var minute = Math.floor(milisec/60000);  // 1 minute = 60000 ms
     var second = (milisec - minute*60000)/1000;   //1 second = 1000 ms
 
+    if(second%1 === 0) second = second + ".000";
+
     return "[" + minute + ":" + second + "]";
 }
 

@@ -6,4 +6,4 @@
 /************************************/
 /*********** Home profile ***********/
 /************************************/
-const HOST_API = "https://localhost/liliana-player";
+const HOST_API = "http://localhost:9005/liliana-player";
