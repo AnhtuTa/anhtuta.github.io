@@ -44,6 +44,7 @@ body {
     padding-bottom: 35%;
     font-size: 25px;
     /* -webkit-mask-image: -webkit-linear-gradient(top,hsla(0,0%,100%,0),hsla(0,0%,100%,.6) 6%,#fff 12%,#fff 86%,hsla(0,0%,100%,.6) 94%,hsla(0,0%,100%,0)); */
+    border: none;
 }
 
 /* Dark theme */
@@ -55,6 +56,9 @@ body {
     color: #fff;
     /* background: #4c4c4c; */
     font-weight: bold;
+}
+.word-appear .line-active {
+    color: #41BDFF !important;
 }
 
 /* Light theme */
@@ -103,14 +107,21 @@ body {
     width: 10px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: transparent;
+}
+.custom-scrollbar:hover::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
     background: #888;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+
 .btn_align {
     color: #2196F3;
     font-size: 15px !important;
@@ -175,7 +186,7 @@ body {
     width: 100%;
 }
 .audio_normal audio {
-    width: 100%;
+    width: calc(100% - 95px);
     margin: 10px 0;
 }
 .audio_fullscreen {
@@ -189,7 +200,10 @@ body {
     height: 54px;
 }
 .audio_fullscreen audio {
-    width: 100%;
+    width: calc(100% - 95px);
+}
+.audio_fullscreen .Player__Button {
+    top: 13px;
 }
 .overflow-hidden {
     overflow: hidden;
@@ -200,8 +214,8 @@ body {
 	/* background-image: url("background.jpg"); */
 
 	/* Add the blur effect */
-	filter: blur(4px);
-	-webkit-filter: blur(4px);
+	filter: blur(10px);
+	-webkit-filter: blur(10px);
 
 	/* Full height */
 	height: 100%;
@@ -209,7 +223,8 @@ body {
 	/* Center and scale the image nicely */
 	background-position: center;
 	background-repeat: no-repeat;
-	background-size: cover;
+    background-size: cover;
+    box-shadow: 0 0 0 0.3rem;
 }
 .bg-image-fullscreen {
     position: fixed !important;
@@ -243,6 +258,9 @@ body {
 .word-appear .curr-word {
     text-shadow: none;
 }
+.curr-word-lrc {
+    font-weight: bold;
+}
 .setting_seperator {
     color: #737373;
     font-weight: bold;
@@ -265,13 +283,13 @@ body {
     color: #2199F9;
     font-size: 20px;
     margin: 15px 0 5px 0;
+    cursor: pointer;
 }
 .all-song-value {
-    height: 300px;
+    height: 60%;
     overflow-y: auto;
     /* border: 1px solid #2199F9; */
     /* border-radius: 4px; */
-    padding: 10px 0;
     resize: vertical;
     /* scroll-behavior: smooth; */
 }
@@ -294,8 +312,28 @@ body {
     padding: 10px 5px;
     text-align: left;
     color: #ffffff;
-    background: #00b222;
+    background: #2199F9;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
+.tr-active {
+    border-left: 15px solid #2199F9;
+    background: #cfe9ff !important;
+}
+.tr-active .icon-play {
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background-color: transparent;
+    background-image: url(https://static-zmp3.zadn.vn/skins/zmp3-v5.2/images/icon_playing_white.gif);
+    background-position: center;
+    background-repeat: no-repeat;
+    position: absolute;
+    right: 0;
+    top: calc(50% - 12px);
+}
+
 #lyric_playground {
     position: relative;
     height: calc(100% - 75px);  /*75px = height của tag audio */
@@ -355,9 +393,9 @@ body {
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
 .spinning {
-    -webkit-animation:spin 10s linear infinite;
-    -moz-animation:spin 10s linear infinite;
-    animation:spin 10s linear infinite;
+    -webkit-animation:spin 13s linear infinite;
+    -moz-animation:spin 13s linear infinite;
+    animation:spin 13s linear infinite;
 }
 .paused-spin {
     animation-play-state: paused;
@@ -400,6 +438,113 @@ body {
 .select_mp3_label {
     cursor: pointer;
     display: inline-block;
+}
+
+#songTable {
+    width: 100%;
+}
+#songTable td {
+    font-size: 13px;
+    position: relative;
+}
+.song-item:hover {
+    text-decoration: none;
+}
+.song-title {
+    color: #323232;
+    font-weight: bold;
+    font-size: 15px;
+    margin-right: 24px;
+}
+.song-item:hover .song-title {
+    color: #00b222;
+}
+.song-artist {
+    color: #808080;
+    font-size: 13px;
+    margin-right: 24px;
+}
+.all-song-input {
+    margin: 5px 0px;
+    padding: 5px;
+    width: 40%;
+}
+#song_details {
+    margin-top: 20px;
+}
+.Player__Button {
+    top: 23px;
+    padding: 2px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    text-align: center;
+    position: relative;
+    border-radius: 2px;
+    /* margin-right: 3px; */
+    /* border: 1px solid #353535; */
+    border: none;
+    color: #353535;
+    background: transparent;
+    -webkit-transition: border-color .3s, color .3s;
+    transition: border-color .3s, color .3s;
+    outline: none;
+}
+.Player__Button:hover {
+    color: #fff;
+    background: #353535;
+}
+#audio_wrapper {
+    position: relative;
+}
+.btn-prev {
+    position: absolute;
+    right: 60px;
+    margin-right: 2px;
+}
+.btn-next {
+    position: absolute;
+    right: 30px;
+    margin-right: 2px;
+}
+.btn-play-type {
+    position: absolute;
+    right: 0;
+}
+.btn-clear-filter {
+    position: relative;
+    left: -19px;
+    font-size: 20px;
+    top: 0px;
+    color: #c9c9c9;
+    cursor: pointer;
+}
+.btn-clear-filter:hover {
+    color: #838383;
+}
+.input-text {
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.input-text:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+.song-album {
+    width: 34px;
+    height: 34px;
+    float: left;
+    margin-right: 5px;
+    border-radius: 3px;
 }
 
 /* Chú ý: các style sau PHẢI được định nghĩa ở trên rồi (áp dụng
