@@ -1,0 +1,107 @@
+.content, .content-bottom {
+  position: fixed;
+  left: 0;
+  opacity: 0.8;
+  padding: 10px;
+}
+.content {
+  top: 0;
+}
+.content-bottom {
+  bottom: 0;
+z-index: 11;
+}
+.Player__Button {
+  padding: 5px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  text-align: center;
+  position: relative;
+  border-radius: 2px;
+  margin-right: 3px;
+  border: 1px solid #2199F9;
+  color: #2199F9;
+  background: transparent;
+  -webkit-transition: border-color .3s, color .3s;
+  transition: border-color .3s, color .3s;
+  outline: none;
+}
+.Player__Button:hover, .btn-active {
+  color: #fff;
+  background: #2199F9;
+}
+#title, #artist {
+  margin: 7px 0;
+}
+#title {
+  color: #FFF;
+  font-size: 27px;
+}
+#artist {
+  color: #FFF;
+  font-size: 23px;
+}
+.btn-wrapper {
+  margin: 15px 0;
+}
+#audioTime {
+  font-size: 17px;
+  color: #fff;
+  display: inline-block;
+  position: relative;
+  top: 5px;
+}
+#songList {
+  background: #ffffffba;
+  height: 300px;
+  overflow-y: auto;
+}
+.song-item {
+  padding: 3px 3px 3px 6px;
+  cursor: pointer;
+}
+.song-item:hover {
+  background: #ffffffad;
+}
+.span-title {
+  font-weight: bold;
+  font-size: 13px;
+}
+.span-artist {
+  font-style: italic;
+  float: right;
+}
+
+/* scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #888;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.btn-toggle-list {
+  border: none;
+  cursor: pointer;
+  position: relative;
+  color: #2199F9;
+  background: transparent;
+  -webkit-transition: border-color .3s, color .3s;
+  transition: border-color .3s, color .3s;
+  outline: none;
+}
+.btn-toggle-list:hover {
+  color: #fff;
+}
+.song-item-active {
+border-left: 3px solid #2199F9;
+  padding-left: 3px;
+  background: #90ceff;
+}
