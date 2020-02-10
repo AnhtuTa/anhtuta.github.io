@@ -357,7 +357,19 @@ var btnNext = document.getElementsByClassName('btn-next')[0];
 var audioTime = document.getElementById('audioTime');
 // var BASE_URL = "http://107.113.192.104:9005/liliana-player"; // SVMC
 var BASE_URL = "http://localhost:9005/liliana-player";  // local
-var myvids = [];
+var myvids = [{
+  "id" : 1,
+  "title" : "Title",
+  "artist" : "Artists",
+  "album" : "Album",
+  "type" : "Type",
+  "listens" : 0,
+  "fileName" : "audio.mp3",
+  "imageUrl" : null,
+  "createdDate" : "2019-12-30T16:37:03.000+0000",
+  "formatCreatedDate" : "20191230",
+  "streamUrl": "./audio.mp3"
+}];
 var activeVideo = 0;
 var songList = document.getElementById('songList');
 var btnToggleList = document.getElementsByClassName('btn-toggle-list')[0];

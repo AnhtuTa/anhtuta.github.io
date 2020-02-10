@@ -207,10 +207,9 @@ getByClass("btn_decrease_speed").addEventListener("click", function () {
   updateSpeed(-0.1);
 });
 function updateSpeed(offset) {
-  let speed = Number(getSetting("speed"));
-  if (speed == null) {
-    speed = 1;
-  }
+  let speed = getSetting("speed");
+  if(speed == null || speed == undefined) speed = 1;
+  speed = Number(speed);
   speed += offset;
   speed = Number(speed.toFixed("1"));
   myAudio.playbackRate = speed;
