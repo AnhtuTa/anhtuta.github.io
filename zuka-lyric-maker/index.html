@@ -1,43 +1,44 @@
 <html>
 <head>
-	<meta charset="UTF-8">
+  <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>Zuka lyrics makers</title>
-	<link rel="stylesheet" href="../style.css" />
-	<link rel="stylesheet" href="index.css" />
-	<link rel="stylesheet" href="../css/loading.css" />
+  <title>Zuka lyrics makers</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="index.css" />
+  <link rel="stylesheet" href="../css/loading.css" />
 </head>
 <body id="my_body">
-	<div class="lds-roller-wrapper display-none"><div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
-	
-	<div class="body_wrapper">
-		<div class="div-header">Zuka lyrics makers</div>
-		<div style="font-size: 18px;margin: 10px 0;">An awesome lyric maker to create .trc lyric</div>
-		<div style="font-size: 16px;color: #888888;margin: 10px 0;">Posted on: 19/11/2018. Last modified: 20/3/2019</div>
-		<textarea id="input_lyric" placeholder="Paste lyric here..."></textarea><br>
+  <div class="lds-roller-wrapper display-none"><div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
+  
+  <div class="body_wrapper">
+    <div class="div-header">Zuka lyrics makers</div>
+    <div style="font-size: 18px;margin: 10px 0;">An awesome lyric maker to create .trc lyric</div>
+    <div style="font-size: 16px;color: #888888;margin: 10px 0;">Posted on: 19/11/2018. Last modified: 27/2/2020</div>
+    <textarea id="input_lyric" placeholder="Paste lyric here..."></textarea><br>
 
-		<div style="margin: 10px 0 5px 0;">Select an audio file to play</div>
-		<input style="margin: 5px 0 10px 0;" type="file" onchange="loadSong(this, event)" accept="audio/*">
+    <div style="margin: 10px 0 5px 0;">Select an audio file to play</div>
+    <input style="margin: 5px 0 10px 0;" type="file" onchange="loadSong(this, event)" accept="audio/*">
 
-		<div id="song_details"></div>
-		<img style="max-width: 200px;" id="art" src="">
+    <div id="song_details"></div>
+    <img style="max-width: 200px;" id="art" src="">
 
-		<div id="audio_wrapper"></div>
+    <div id="audio_wrapper"></div>
 
-		<input type="checkbox" style="margin: 5px 0;" id="cbShowTime">Show time<br>
-		<button class="btn" onclick="playSong()" id="btn_play" disabled title="Start making lyric">Play</button>
-		<button class="btn" onclick="btnNextWord()" id="btn_next" disabled title="Add miliseconds to next word" onkeypress="btnNextKeyPress(event)">Next</button>
-		<button class="btn" onclick="finishWord()" id="btn_finish" disabled title="Add miliseconds to next word">Finish word</button>
+    <input type="checkbox" style="margin: 5px 0;" id="cbShowTime">Show time<br>
+    <button class="btn" onclick="playSong()" id="btn_play" disabled title="Start making lyric">Play</button>
+    <button class="btn" onclick="btnNextWord()" id="btn_next" disabled title="Add miliseconds to next word" onkeypress="btnNextKeyPress(event)">Next</button>
+    <button class="btn" onclick="finishWord()" id="btn_finish" disabled title="Add miliseconds to next word">Finish word</button>
+    <button class="btn" onclick="finishLine()" id="btn_finish_line" disabled title="Add miliseconds to the rest words in this line">Finish line</button>
 
-		<!-- <button onclick="toggleWordTime(this)" class="btn_toggle_time">Show time</button> -->
-		<!-- 
-			DIV elements can get focus if set the tabindex attribute:
-			https://stackoverflow.com/questions/7876283/using-focus-to-style-outer-div
-		-->
-		<div id="div_result" tabindex="0" class="display-none"></div>
-		<div id="btn_download_wrapper"></div>
-	</div>
+    <!-- <button onclick="toggleWordTime(this)" class="btn_toggle_time">Show time</button> -->
+    <!-- 
+      DIV elements can get focus if set the tabindex attribute:
+      https://stackoverflow.com/questions/7876283/using-focus-to-style-outer-div
+    -->
+    <div id="div_result" tabindex="0" class="display-none"></div>
+    <div id="btn_download_wrapper"></div>
+  </div>
 </body>
 
 <script src="id3-minimized.js"></script>

@@ -3,6 +3,7 @@ var div_result = document.getElementById("div_result");
 var btn_play = document.getElementById("btn_play");
 var btn_next = document.getElementById("btn_next");
 var btn_finish = document.getElementById("btn_finish");
+var btn_finish_line = document.getElementById("btn_finish_line");
 var myAudio, artist, title, audioFileName;
 var audio_wrapper = document.getElementById("audio_wrapper");
 var song_details = document.getElementById("song_details");
@@ -100,6 +101,7 @@ function enableBtns() {
     btn_next.disabled = false;
     btn_next.focus();
     btn_finish.disabled = false;
+    btn_finish_line.disabled = false;
     div_result.classList.remove("display-none");
     //div_result.focus();
     cbShowTime.disabled = true;
@@ -117,6 +119,7 @@ function enableBtns() {
 function disableBtns() {
     btn_next.disabled = true;
     btn_finish.disabled = true;
+    btn_finish_line.disabled = true;
     div_result.classList.add("display-none");
     cbShowTime.disabled = false;
 
@@ -179,11 +182,14 @@ function btnNextWord() {
 function btnNextKeyPress(event) {
     //console.log(event.keyCode);
     if(event.keyCode == 110) {
-        // chữ 'n'
-        nextWord();
+        // chữ 'n'. Có thể ấn Enter hoặc Backspace cũng được
+        btnNextWord();
     } else if(event.keyCode == 102) {
         // chữ f
         finishWord();
+    }  else if(event.keyCode == 108) {
+        // chữ l
+        finishLine();
     }
 }
 
@@ -206,7 +212,7 @@ function addTimeBeforeWord(word, timeString) {
  * Thêm thời gian vào sau 1 từ
  * @param word: thẻ span cần thêm time vào
  **/ 
-    function addTimeAfterWord(word, timeString) {
+function addTimeAfterWord(word, timeString) {
     var span = document.createElement("span");
     if(cbShowTime.checked == true) {
         span.setAttribute("class", "word_time");
@@ -225,27 +231,86 @@ function finishWord() {
     if(nextWord!=null) nextWord.classList.add("finish_word");
 }
 
-function createKaraokeEffect(currWord, nextWord) {
-    window.clearInterval(interval);
-    percent = 0;
-    if(currWord!=null) currWord.style.background = "";
+/**
+ * Hàm này khá giống btnNextWord, chỉ khác ở chỗ, nó sẽ coi từ word hiện tại
+ * đến word cuối cùng của dòng hiện tại là 1 word
+ */
+function finishLine() {
+    currTime = new Date().valueOf();
+    var diff;
+    var timeString = "";
+    var diffWord = 0;
+    var tmpWord;
 
-    interval = window.setInterval(function() {
-        if(percent < 60) percent += 10;
-        else if(percent < 99) percent += (100 - percent)/5;
-        else window.clearInterval(interval);
+    if(finishTime > prevTime && finishTime < currTime) {
+        diff = finishTime - prevTime;
+    } else {
+        diff = currTime - prevTime;
+    }
 
-        if(nextWord!=null) nextWord.style.background = "linear-gradient(to right, #00b217 " + percent + "%, #ffffff00 " + (100 - percent) + "%)";
-    }, 300);
+    currWord = document.getElementById("word_" + index);
+    while(true) {
+        diffWord++;
+        tmpWord = document.getElementById("word_" + (index + diffWord));
+        if(tmpWord.classList.contains("start_line")) {
+            break;
+        }
+        tmpWord.classList.add("passed_word");
+    }
+    nextWord = document.getElementById("word_" + (index + diffWord));
+    createBiggerWordEffect(currWord, nextWord);
+    btn_next.focus();
+
+    if(index == 0) {
+        // Đây là từ đầu tiên
+        timeString += getFormattedPassTime(currTime - startTime);
+        addTimeBeforeWord(currWord, timeString);
+        currWord.classList.add("passed_word");
+        
+        index += diffWord;
+        prevTime = currTime;
+        return;
+    }
+
+    if(currWord.classList.contains("start_line")) {
+        // prevTime lúc này chính là thời điểm kết thúc của từ cuối cùng của hàng trước đó (Xem [1])
+        //fixJsSidaError(prevTime);
+        timeString += getFormattedPassTime(prevTime - startTime);
+    }
+    timeString += "<" + diff + ">";
+
+    if(finishTime > prevTime && finishTime < currTime) {
+        addTimeAfterWord(currWord, "<" + (currTime - finishTime) + ">");
+    }
+    // currWord.innerHTML = timeString + currWord.innerHTML;
+    addTimeBeforeWord(currWord, timeString);
+    currWord.classList.add("passed_word");
+
+    // scroll lyric
+    div_result.scrollTop = currWord.offsetTop - document.getElementById("word_1").offsetTop - 50;
+    
+    index += diffWord;
+    
+    // [1] Set thời điểm bắt đầu của từ này = thời điểm kết thúc của từ này
+    // (để dùng cho việc tính toán thời điểm của từ tiếp theo)
+    prevTime = currTime;
 }
 
 function createBiggerWordEffect(currWord, nextWord) {
+    removeBiggerWord(currWord);
+    addBiggerWord(nextWord);
+}
+
+function removeBiggerWord(currWord) {
     if(currWord!=null) {
         currWord.classList.remove("bigger_word");
-        // uncomment this if you like!
-        // currWord.classList.remove("finish_word");
     }
-    if(nextWord!=null) nextWord.classList.add("bigger_word");
+}
+
+function addBiggerWord(nextWord) {
+    if(nextWord!=null) {
+        nextWord.classList.add("bigger_word");
+    }
 }
 
 /**
@@ -281,10 +346,8 @@ function hideLoading() {
 }
 
 function downloadLyric() {
-    var word_time = document.getElementsByClassName("word_time");
-    if(word_time[0].classList.contains("display-none")) {
-        toggleWordTime();
-    }
+    showWordTime();
+    
     var a = document.body.appendChild(
         document.createElement("a")
     );
@@ -301,21 +364,32 @@ function downloadLyric() {
 
 function toggleWordTime() {
     var word_time = document.getElementsByClassName("word_time");
-    //console.log(word_time);
 
     if(word_time[0].classList.contains("display-none")) {
-        // show time
-        for(var i = 0; i < word_time.length; i++) {
-            word_time[i].classList.remove("display-none");
-        }
-        //btn_toggle_time.innerText = "Hide time";
+        showWordTime(word_time);
     } else {
-        // hide time
-        for(var i = 0; i < word_time.length; i++) {
-            word_time[i].classList.add("display-none");
-        }
-        //btn_toggle_time.innerText = "Show time";
+        hideWordTime(word_time);
     }
+}
+
+function showWordTime(word_time = null) {
+    if(word_time == null || word_time == undefined) {
+        word_time = document.getElementsByClassName("word_time");
+    }
+    for(var i = 0; i < word_time.length; i++) {
+        word_time[i].classList.remove("display-none");
+    }
+    //btn_toggle_time.innerText = "Hide time";
+}
+
+function hideWordTime(word_time = null) {
+    if(word_time == null || word_time == undefined) {
+        word_time = document.getElementsByClassName("word_time");
+    }
+    for(var i = 0; i < word_time.length; i++) {
+        word_time[i].classList.add("display-none");
+    }
+    //btn_toggle_time.innerText = "Show time";
 }
 
 // reference: https://github.com/aadsm/JavaScript-ID3-Reader
