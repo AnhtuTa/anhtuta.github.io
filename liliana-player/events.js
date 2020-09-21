@@ -95,10 +95,8 @@ div_result.addEventListener("click", function () {
 btn_fullscreen.addEventListener("click", function () {
   if (div_result.classList.contains("lyric_fullscreen")) {
     setLyricNormal();
-    saveSettings("fullscreen", false);
   } else {
     setLyricFullscreen();
-    saveSettings("fullscreen", true);
   }
 });
 left_img.addEventListener("click", function () {
@@ -124,7 +122,8 @@ function setLyricNormal() {
   div_left_wrapper.classList.remove("left_fs");
   div_left_wrapper.classList.add("left_normal");
 
-  scrollPage(myAudio, 300);
+  saveSettings("fullscreen", false);
+  // scrollPage(myAudio, 300);
   setTimeout(() => {
     scrollLyric();
   }, 350)
@@ -145,6 +144,7 @@ function setLyricFullscreen() {
   div_left_wrapper.classList.add("left_fs");
   div_left_wrapper.classList.remove("left_normal");
 
+  saveSettings("fullscreen", true);
   setTimeout(() => {
     scrollLyric();
   }, 350)

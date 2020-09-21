@@ -26,9 +26,16 @@ function settingUIUsingParams() {
   if (wordAppear && wordAppear.trim() === "true") {
     settingWordAppear(true);
   }
+
+  let fullscreen = getRequestParam("fullscreen");
+  if (fullscreen && fullscreen.trim() === "true") {
+    setLyricFullscreen();
+  } else if(fullscreen && fullscreen.trim() === "false") {
+    setLyricNormal();
+  }
 }
 
-function showAllSongs(sort_by, sort_order) {
+function showTable(sort_by, sort_order, callback) {
   let sortBy = sort_by != null ? sort_by : getRequestParam("sortBy");
   let sortOrder = sort_order != null ? sort_order : getRequestParam("sortOrder");
 
@@ -52,7 +59,12 @@ function showAllSongs(sort_by, sort_order) {
   }).then(json => {
     playList = json;
     createSongTable(json);
+    if(callback) callback();
+  });
+}
 
+function showAllSongs(sort_by, sort_order) {
+  showTable(sort_by, sort_order, () => {
     let file = getRequestParam("file");
     if (!activeAudio) {
       for (let i = 0; i < playList.length; i++) {
@@ -64,7 +76,7 @@ function showAllSongs(sort_by, sort_order) {
       }
     }
     showAudioMetadata(getLyric.bind(null, file));
-  });
+  })
 }
 
 function createSongTable(json) {
@@ -99,10 +111,10 @@ function createSongTable(json) {
   // table headers
   trTag = createNewElement("tr");
   trTag.innerHTML = "<th style='text-align: right;'>STT</th>" +
-    "<th style='cursor: pointer;' onclick=\"showAllSongs('title', 'ASC')\">Song</th>" +
-    "<th style='cursor: pointer;' onclick=\"showAllSongs('listens', 'DESC')\">Listens</th>" +
-    "<th>Type</th>" +
-    "<th style='cursor: pointer;' onclick=\"showAllSongs('createdDate', 'DESC')\">Date</th>";
+    "<th style='cursor: pointer;' onclick=\"showTable('title', 'ASC')\">Song</th>" +
+    "<th style='cursor: pointer;' onclick=\"showTable('listens', 'DESC')\">Listens</th>" +
+    "<th style='cursor: pointer;' onclick=\"showTable('type', 'ASC')\">Type</th>" +
+    "<th style='cursor: pointer;' onclick=\"showTable('createdDate', 'DESC')\">Date</th>";
   tableTag.appendChild(trTag);
 
   for (let i = 0; i < json.length; i++) {

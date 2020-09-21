@@ -230,7 +230,7 @@ function getSongDetails(json) {
   left_title.innerText = hideText(title, hideInfo);
   left_artist.innerText = hideText(artist, hideInfo);
   left_album.innerHTML = "(" + hideText(album, hideInfo) + ")";
-  document.title = "Liliana Player | " + title + " - " + artist;
+  document.title = title + " - " + artist + " | Liliana Player";
 
   return "<div class='song_title'>" + hideText(title, hideInfo) + "&nbsp;-&nbsp;</div>" +
     "<div class='song_artist'>" + hideText(artist, hideInfo) + "</div>" +
@@ -264,54 +264,8 @@ function initAudio() {
     nextSong();
   }
 
-  btnPlayType = createNewElement("button", "btn_play_type", "Player__Button btn-play-type", { "title": "Shuffle" });
-  btnPlayType.innerHTML = BTN_SHUFFLE_SVG;
-  audio_wrapper.appendChild(btnPlayType);
-  btnPlayType.onclick = () => {
-    let newIndex;
-    for (let i = 0; i < playTypeList.length; i++) {
-      if (playType === playTypeList[i]) {
-        newIndex = i + 1;
-        if (newIndex == playTypeList.length) newIndex = 0;
-        setPlayType(newIndex);
-        break;
-      }
-    }
-  }
-}
-
-function setPlayType(i) {
-  playType = playTypeList[i];
-  btnPlayType.setAttribute("title", playTypeTitleList[i]);
-  btnPlayType.innerHTML = playTypeSvgList[i];
-  saveSettings("playType", playType);
-}
-
-function initAudio() {
-  myAudio = document.createElement("audio");
-  myAudio.setAttribute("controls", "");
-  myAudio.setAttribute("id", "myAudio");
-  audio_wrapper.appendChild(myAudio);
-  let vol = getSetting("volume");
-  if (vol) myAudio.volume = vol;
-  addAudioEvent();
-
-  btnPrev = createNewElement("button", "btn_prev", "Player__Button btn-prev", { "title": "Previous" });
-  btnPrev.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" fill="currentColor"><path d="M4 4 H8 V14 L28 4 V28 L8 18 V28 H4 z "></path></svg>';
-  audio_wrapper.appendChild(btnPrev);
-  btnPrev.onclick = () => {
-    prevSong();
-  }
-
-  btnNext = createNewElement("button", "btn_next", "Player__Button btn-next", { "title": "Next" });
-  btnNext.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" fill="currentColor"><path d="M4 4 L24 14 V4 H28 V28 H24 V18 L4 28 z "></path></svg>';
-  audio_wrapper.appendChild(btnNext);
-  btnNext.onclick = () => {
-    nextSong();
-  }
-
-  btnPlayType = createNewElement("button", "btn_play_type", "Player__Button btn-play-type", { "title": "Shuffle" });
-  btnPlayType.innerHTML = BTN_SHUFFLE_SVG;
+  btnPlayType = createNewElement("button", "btn_play_type", "Player__Button btn-play-type", { "title": "Sequence" });
+  btnPlayType.innerHTML = BTN_SEQUENCE_SVG;
   audio_wrapper.appendChild(btnPlayType);
   btnPlayType.onclick = () => {
     let newIndex;

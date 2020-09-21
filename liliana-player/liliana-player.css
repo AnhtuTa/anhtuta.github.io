@@ -62,6 +62,9 @@ body {
 }
 
 /* Light theme */
+.div-res-light {
+    border: 1px solid #575757 !important;
+}
 .div-res-light .line-active {
     color: #575757;
     /* background: #e8e8e8; */
