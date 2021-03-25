@@ -1,9 +1,9 @@
 /************************************/
 /*********** SVMC ***********/
 /************************************/
-const HOST_API = "https://107.113.192.104:9005/liliana-player";
+// const HOST_API = "https://107.113.192.104:9005/liliana-player";
 
 /************************************/
 /*********** Home ***********/
 /************************************/
-// const HOST_API = "https://localhost:9005/liliana-player";
+const HOST_API = "https://localhost:9005/liliana-player";

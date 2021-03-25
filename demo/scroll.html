@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Scroll demo</title>
+    <style>
+      body {
+        padding: 1rem;
+        text-align: center;
+      }
+
+      div {
+        margin: auto;
+        height: 200px;
+        width: 500px;
+        border: 1px solid black;
+        overflow: auto;
+      }
+
+      ul {
+        margin: 0;
+        padding: 0;
+      }
+
+      li {
+        height: 80px;
+        background: #2196f3;
+        list-style: none;
+        margin: 0.5rem;
+        color: white;
+      }
+
+      #innerelement {
+        background: #f44336;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>Example inside an element</h2>
+    <h2>Example inside an element</h2>
+    <h2>Example inside an element</h2>
+    <div id="container">
+      <ul>
+        <li>A</li>
+        <li>B</li>
+        <li>C</li>
+        <li id="innerelement">D</li>
+        <li>E</li>
+        <li>F</li>
+        <li>G</li>
+      </ul>
+    </div>
+    <button id="btn1">SCROLL TO D</button>
+
+    <h2>Example scroll page</h2>
+    <button id="btn2">SCROLL TO #d7</button>
+    <div id="d1">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+    <div id="d2">Eos, illo? Eius rem illum dolorum, rerum eligendi,</div>
+    <div id="d3">
+      This is #d3: nam et ratione at earum totam dignissimos possimus corrupti,
+      aliquid sed eos fugit esse.
+    </div>
+    <div id="d4">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+    <div id="d5">Eos, illo? Eius rem illum dolorum, rerum eligendi,</div>
+    <div id="d6">
+      nam et ratione at earum totam dignissimos possimus corrupti, aliquid sed
+      eos fugit esse.
+    </div>
+    <div id="d7">
+      This is #d7: Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+    </div>
+    <div id="d8">Eos, illo? Eius rem illum dolorum, rerum eligendi,</div>
+    <div id="d9">
+      This is #d9: nam et ratione at earum totam dignissimos possimus corrupti,
+      aliquid sed eos fugit esse.
+    </div>
+  </body>
+  <script>
+    document.getElementById("btn1").onclick = function () {
+      scrollInsideElement(
+        document.getElementById("container"),
+        document.getElementById("innerelement"),
+        500
+      );
+    };
+
+    document.getElementById("btn2").onclick = function () {
+      scrollPage(document.getElementById("d7"), 500);
+    };
+
+    /**
+     * Scroll to an element inside a container
+     * @param {HTMLElement} container The wrapper element to do scrolling
+     * @param {HTMLElement} element Element inside container. Scroll to its position
+     * @param {Number} duration Time to scroll, in milisecond
+     **/
+    function scrollInsideElement(container, element, duration) {
+      var pos = getRelativePos(element);
+      var start = container.scrollTop,
+        change = pos.top - start,
+        startTime = performance.now(),
+        val,
+        now,
+        elapsed,
+        t;
+
+      function animateScroll() {
+        now = performance.now();
+        elapsed = now - startTime;
+        t = elapsed / duration;
+
+        container.scrollTop = start + change * easeInOutQuad(t);
+
+        if (t < 1) window.requestAnimationFrame(animateScroll);
+      }
+
+      animateScroll();
+    }
+
+    function getRelativePos(elm) {
+      var pPos = elm.parentNode.getBoundingClientRect(), // parent pos
+        cPos = elm.getBoundingClientRect(), // target pos
+        pos = {};
+
+      (pos.top = cPos.top - pPos.top + elm.parentNode.scrollTop),
+        (pos.right = cPos.right - pPos.right),
+        (pos.bottom = cPos.bottom - pPos.bottom),
+        (pos.left = cPos.left - pPos.left);
+
+      return pos;
+    }
+
+    /**
+     * Scroll the page to an element's position
+     * @param {HTMLElement} element the tag we wants browser to scroll to
+     * @param {Number} duration scrolling time in milisecond
+     */
+    function scrollPage(element, duration) {
+      var startingY = window.pageYOffset;
+      var elementY = window.pageYOffset + element.getBoundingClientRect().top;
+
+      // If element is close to page's bottom then window will scroll only to some position above the element.
+      var targetY =
+        document.body.scrollHeight - elementY < window.innerHeight
+          ? document.body.scrollHeight - window.innerHeight
+          : elementY;
+      var diff = targetY - startingY;
+      var start;
+
+      if (!diff) return;
+
+      // Bootstrap our animation - it will get called right before next frame shall be rendered.
+      window.requestAnimationFrame(function step(timestamp) {
+        if (!start) start = timestamp;
+        // Elapsed miliseconds since start of scrolling.
+        var time = timestamp - start;
+
+        // Get percent of completion in range [0, 1].
+        var percent = Math.min(time / duration, 1);
+
+        // Apply the easing.
+        // It can cause bad-looking slow frames in browser performance tool, so be careful.
+        percent = easeInOutCubic(percent);
+
+        window.scrollTo(0, startingY + diff * percent);
+
+        // Proceed with animation as long as we wanted it to.
+        if (time < duration) {
+          window.requestAnimationFrame(step);
+        }
+      });
+    }
+
+    // From: https://gist.github.com/gre/1650294
+    function easeInOutCubic(t) {
+      return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+    }
+    function easeInOutQuad(t) {
+      return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    }
+  </script>
+</html>

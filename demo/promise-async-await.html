@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Promise, Async/await demo</title>
+    <style>
+      .msg-box-cb {
+        padding: 7px;
+        background: #efefef;
+        display: inline-block;
+        border-radius: 5px;
+        margin: 3px 0;
+      }
+      .msg-box-pr {
+        padding: 7px;
+        background: #2196f3;
+        color: #fff;
+        display: inline-block;
+        border-radius: 5px;
+        margin: 3px 0;
+      }
+      .msg-box-aw {
+        padding: 7px;
+        background: #00b217;
+        color: #fff;
+        display: inline-block;
+        border-radius: 5px;
+        margin: 3px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <p>
+      Ref:
+      <a href="https://kipalog.com/posts/JS--async-await-don-gian"
+        >https://kipalog.com/posts/JS--async-await-don-gian</a
+      >
+    </p>
+    <button onclick="usingCallback()">Using callback</button>
+    <button onclick="usingPromise()">Using Promise</button>
+    <button onclick="usingAsyncAwait()">Using Async/await</button>
+    <button onclick="clearDivRes()">Clear</button>
+    <div id="div_res"></div>
+  </body>
+  <script>
+    var div_res = document.getElementById("div_res");
+
+    function showText(txt, className) {
+      var divTag = document.createElement("div");
+      if (className != null && className != "") {
+        divTag.setAttribute("class", className);
+      }
+      divTag.innerText = txt;
+      div_res.appendChild(divTag);
+      div_res.appendChild(document.createElement("br"));
+    }
+
+    function waitCb(ms, cb) {
+      setTimeout(cb, ms);
+    }
+
+    function usingCallback() {
+      showText("sắp rồi...", "msg-box-cb");
+
+      waitCb(1000, () => {
+        showText("chờ tí...", "msg-box-cb");
+        waitCb(200, () => {
+          showText("thêm chút nữa thôi...", "msg-box-cb");
+          waitCb(1500, () => {
+            showText("xong rồi đấy!", "msg-box-cb");
+          });
+        });
+      });
+    }
+
+    function waitPr(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    function usingPromise() {
+      showText("sắp rồi...", "msg-box-pr");
+
+      waitPr(1000)
+        .then(() => {
+          showText("chờ tí...", "msg-box-pr");
+          return waitPr(200);
+        })
+        .then(() => {
+          showText("thêm chút nữa thôi...", "msg-box-pr");
+          return waitPr(1500);
+        })
+        .then(() => {
+          showText("xong rồi đấy!", "msg-box-pr");
+        });
+    }
+
+    async function usingAsyncAwait() {
+      showText("sắp rồi...", "msg-box-aw");
+      await waitPr(1000);
+      showText("chờ tí...", "msg-box-aw");
+      await waitPr(200);
+      showText("thêm chút nữa thôi...", "msg-box-aw");
+      await waitPr(1500);
+      showText("xong rồi đấy!", "msg-box-aw");
+    }
+
+    function clearDivRes() {
+      div_res.innerHTML = "";
+    }
+  </script>
+</html>
