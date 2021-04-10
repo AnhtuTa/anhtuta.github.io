@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    .article {
+      background-color: #fff;
+      display: inline-block;
+      border-right: 1px solid;
+      border-bottom: 1px solid;
+      padding: 5px;
+    }
+
+    .p1 {
+      background-color: #8fcaff;
+      width: 50%;
+      margin: auto;
+      margin-bottom: 10px;
+    }
+
+    .p2 {
+      background-color: #ff6969;
+      width: 50%;
+      margin: auto;
+      margin-bottom: 10px;
+    }
+
+    .yt_wrapper {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Auto play Youtube vieo when scroll to</h2>
+  <div>Ref: <a
+      href="https://developers.google.com/youtube/iframe_api_reference">https://developers.google.com/youtube/iframe_api_reference</a>
+  </div>
+
+  <h3>Cần biết</h3>
+  <ul>
+    <li>window.innerHeight = chiều dài của browser hiện tại. Khi scroll thì thuộc tính này KHÔNG đổi. Khi resize window
+      thì thuộc tính này thay đổi</li>
+    <li>window.scrollY = khoảng cách từ đầu trang tới vị trí scroll hiện tại (tính theo mép trên của trang web). Khi
+      scroll thì thuộc tính này thay đổi. Khi resize window thì thuộc tính này KHÔNG đổi</li>
+    <li>element.offsetTop = khoảng cách từ đầu trang tới vị trí của element đó. Khi scroll hay resize thì thuộc tính này
+      KHÔNG đổi</li>
+    <li>Ref: <a
+        href="https://javascript.info/size-and-scroll#geometry">https://javascript.info/size-and-scroll#geometry</a>
+    </li>
+  </ul>
+  <p>Let scroll down!</p>
+
+  <div>
+    <p class="p1"><span class="article">Article 1</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+      ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+      esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+      officia deserunt mollit anim id est laborum.</p>
+
+    <p class="p2"><span class="article">Article 2</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+      ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+      esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+      officia deserunt mollit anim id est laborum.</p>
+
+    <p class="p1"><span class="article">Article 3</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+      ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+      esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+      officia deserunt mollit anim id est laborum.</p>
+
+    <p class="p2"><span class="article">Article 4</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+      ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+      esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+      officia deserunt mollit anim id est laborum.</p>
+
+    <p class="p1"><span class="article">Article 3</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+      ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+      esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+      officia deserunt mollit anim id est laborum.</p>
+
+    <p class="p2"><span class="article">Article 4</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+      ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+      esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+      officia deserunt mollit anim id est laborum.</p>
+
+    <p class="p1"><span class="article">Article 3</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+      ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+      esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+      officia deserunt mollit anim id est laborum.</p>
+
+    <p class="p2"><span class="article">Article 4</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+      ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+      esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+      officia deserunt mollit anim id est laborum.</p>
+
+    <p class="p1"><span class="article">Article 3</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+      ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+      esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+      officia deserunt mollit anim id est laborum.</p>
+
+    <p class="p2"><span class="article">Article 4</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+      ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+      esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+      officia deserunt mollit anim id est laborum.</p>
+  </div>
+
+  <div class="yt_wrapper">
+    <div id="video-container"></div>
+  </div>
+
+  <div>
+    <p class="p1"><span class="article">Article 3</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+      ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+      esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+      officia deserunt mollit anim id est laborum.</p>
+
+    <p class="p2"><span class="article">Article 4</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+      ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+      esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+      officia deserunt mollit anim id est laborum.</p>
+
+    <p class="p1"><span class="article">Article 3</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+      ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+      esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+      officia deserunt mollit anim id est laborum.</p>
+
+    <p class="p2"><span class="article">Article 4</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+      ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+      esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+      officia deserunt mollit anim id est laborum.</p>
+
+    <p class="p1"><span class="article">Article 3</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+      ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+      esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+      officia deserunt mollit anim id est laborum.</p>
+
+    <p class="p2"><span class="article">Article 4</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+      ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+      esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+      officia deserunt mollit anim id est laborum.</p>
+
+    <p class="p1"><span class="article">Article 3</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+      ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+      esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+      officia deserunt mollit anim id est laborum.</p>
+
+    <p class="p2"><span class="article">Article 4</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+      ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+      esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+      officia deserunt mollit anim id est laborum.</p>
+  </div>
+</body>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+  let player, videoContainer;
+
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('video-container', {
+      width: 560,
+      height: 315,
+      videoId: 'KPTGfEjl2xg',
+      playerVars: {
+        // playlist: 'z1Ev1Z0cCG4,FG0fTKAqZ5g',
+        autoplay: 0,
+        // controls: 0
+      },
+      events: {
+        onReady: initialize,
+        onStateChange: onPlayerStateChange
+      }
+    });
+  }
+
+  function initialize() {
+    videoContainer = document.getElementById("video-container");
+
+    window.addEventListener('scroll', function () {
+      if (checkIfVideoIsInsideScreen()) {
+        playYt();
+      } else {
+        pauseYt();
+      }
+
+    }, false);
+  }
+
+  function checkIfVideoIsInsideScreen() {
+    return (window.scrollY + window.innerHeight >= videoContainer.offsetTop + videoContainer.offsetHeight) &&
+      (window.scrollY < videoContainer.offsetTop);
+  }
+
+  function playYt() {
+    if (player.getPlayerState() != YT.PlayerState.PLAYING) player.playVideo();
+  }
+
+  function pauseYt() {
+    if (player.getPlayerState() != YT.PlayerState.PAUSED) player.pauseVideo();
+  }
+
+  function onPlayerStateChange(event) {
+    // console.log(event.data)
+  }
+
+</script>
+
+</html>
