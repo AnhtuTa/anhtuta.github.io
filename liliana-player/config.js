@@ -1,9 +1,9 @@
 /************************************/
-/*********** SVMC ***********/
+/*********** Product ***********/
 /************************************/
-// const HOST_API = "https://107.113.192.104:9005/liliana-player";
+const HOST_API = "https://ducdongyyen.com/laravel/public";
 
 /************************************/
-/*********** Home ***********/
+/*********** Local ***********/
 /************************************/
-const HOST_API = "https://localhost:9005/liliana-player";
+// const HOST_API = "http://localhost:9005/liliana-player";

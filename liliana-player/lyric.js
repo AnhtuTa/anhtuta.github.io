@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 showAllSongs(null, null);
 settingUIUsingParams();
@@ -22,37 +22,41 @@ function clearPlayLyricInterval() {
  * (title and artist of this song were stored in title and artist variables)
  * @param {string} file Name of mp3 file
  */
-function getLyric(file) {
+async function getLyric(file) {
   let lyricURL;
   let fileName = file.substr(0, file.length - 4); // remove ".mp3"
+  let isFoundLyric = false;
+  const lyricURLs = [
+    HOST_API + "/api/lyric?file=" + artist + " - " + title + ".trc",
+    HOST_API + "/api/lyric?file=" + fileName + ".trc",
+    HOST_API + "/api/lyric?file=" + artist + " - " + title + ".lrc",
+    HOST_API + "/api/lyric?file=" + fileName + ".lrc",
+  ];
 
-  lyricURL = HOST_API + "/api/lyric?file=" + artist + " - " + title + ".trc";
-  lyricURL += "&file=" + fileName + ".trc";
-  $.ajax({
-    url: lyricURL
-  }).then(lyric => {
-    isLrc = false;
-    saveLyric(lyric);
-    lyricFile = lyricURL.substring(lyricURL.indexOf("?file=") + 6);
-  }).fail(err => {
-    lyricURL = HOST_API + "/api/lyric?file=" + artist + " - " + title + ".lrc";
-    lyricURL += "&file=" + fileName + ".lrc";
-    lyricURL
-    $.ajax({
-      url: lyricURL
-    }).then(lyric => {
-      isLrc = true;
+  for (let i = 0; i < lyricURLs.length; i++) {
+    lyricURL = lyricURLs[i];
+    if (i > 1) isLrc = true;
+    else isLrc = false;
+
+    try {
+      const lyric = await $.ajax({
+        url: lyricURL,
+      });
       saveLyric(lyric);
       lyricFile = lyricURL.substring(lyricURL.indexOf("?file=") + 6);
-    }).fail(err => {
-      lyricFile = null;
-      if (JSON.parse(err.responseText).code === 404002) {
-        setNoLyric();
-      } else {
-        console.log(err);
-      }
-    });
-  });
+      isFoundLyric = true;
+      break;
+    } catch (err) {
+      // When there is no lyric (API return 404), it will go here.
+      // We do nothing because we will call every API to get lyric
+      // console.log("Error: ", JSON.parse(err.responseText));
+    }
+  }
+
+  if (!isFoundLyric) {
+    lyricFile = null;
+    setNoLyric();
+  }
 }
 
 function saveLyric(lyric) {
@@ -107,8 +111,8 @@ function initTrcLyric() {
   for (var i = 0; i < words.length; i++) {
     temp = words[i].match(/\[\d+:\d+\.\d+\]/g); // ex: temp = ["[1:15.047]"]
     if (temp != null) {
-      startLine = decodeTime(temp[0]);  // ex: 75.047
-      temp = words[i].substring(temp[0].length);  // ex: <271>I <256>keep <790>saying <1254>no
+      startLine = decodeTime(temp[0]); // ex: 75.047
+      temp = words[i].substring(temp[0].length); // ex: <271>I <256>keep <790>saying <1254>no
       wordsInLine = temp.match(/<\d+>[^\<]*/g);
       let divLine = createNewElement("div", null, "line");
 
@@ -133,7 +137,12 @@ function initTrcLyric() {
 
         // Do lưu time vào 2 mảng startTimes và endTimes nên việc
         // thêm attribute time-start và time-start chỉ dùng để debug
-        let spanWord = createNewElement("span", "word-" + cntWord, "not-pass-word", { "time-start": startWord, "time-end": endWord });
+        let spanWord = createNewElement(
+          "span",
+          "word-" + cntWord,
+          "not-pass-word",
+          { "time-start": startWord, "time-end": endWord }
+        );
         spanWord.innerText = wordsInLine[j].replace(/<\d+>/, "");
         if (spanWord.innerText == "") spanWord.innerHTML = "&nbsp";
         startTimes[cntWord] = startWord;
@@ -154,8 +163,11 @@ function initTrcLyric() {
 }
 
 function initLrcLyric() {
-  let lineTime = "", lineTimeLen, lineWords, startLine;
-  let lineMap = new Map();  // key là 1 phần tử trong mảng startTimes
+  let lineTime = "",
+    lineTimeLen,
+    lineWords,
+    startLine;
+  let lineMap = new Map(); // key là 1 phần tử trong mảng startTimes
 
   for (let i = 0; i < words.length; i++) {
     lineTime = words[i].match(/\[\d+:\d+\.\d+\]/g);
@@ -179,7 +191,9 @@ function initLrcLyric() {
     }
   }
 
-  startTimes.sort(function (a, b) { return a - b });
+  startTimes.sort(function (a, b) {
+    return a - b;
+  });
 
   for (let i = 0; i < startTimes.length; i++) {
     let divLine = createNewElement("div", null, "line");
@@ -236,12 +250,12 @@ function initSettingsAtPlayer() {
 }
 
 /*
-    * CHÚ Ý [1]: Nếu lyric sai thời gian:
-    * VD: nếu startTimes[4] = 3, endTimes[4] = 5 và
-    * startTimes[5] = 4, endTimes[5] = 6, ta thấy 2 từ này có khoảng
-    * thời gian chồng lên nhau, do lỗi lyric
-    * Fix: xem thêm hàm getCurrentWordByTime
-    */
+ * CHÚ Ý [1]: Nếu lyric sai thời gian:
+ * VD: nếu startTimes[4] = 3, endTimes[4] = 5 và
+ * startTimes[5] = 4, endTimes[5] = 6, ta thấy 2 từ này có khoảng
+ * thời gian chồng lên nhau, do lỗi lyric
+ * Fix: xem thêm hàm getCurrentWordByTime
+ */
 function updateLyric() {
   if (isNoLyric()) {
     clearPlayLyricInterval();
@@ -307,17 +321,29 @@ function updateLyric() {
       let nextWord = getById("word-" + (currWordID + 1));
       if (nextWord) {
         // let timeDiff = endTimes[currWordID] - startTimes[currWordID];
-        let timeDiff = endTimes[currWordID] + offsetTime / 1000 - myAudio.currentTime;
+        let timeDiff =
+          endTimes[currWordID] + offsetTime / 1000 - myAudio.currentTime;
         if (timeDiff >= 5) {
-          createCountDownInterval((timeDiff - 5) * 1000 + offsetTime, 5, currWord);
+          createCountDownInterval(
+            (timeDiff - 5) * 1000 + offsetTime,
+            5,
+            currWord
+          );
         } else if (timeDiff >= 3) {
-          createCountDownInterval((timeDiff - 3) * 1000 + offsetTime, 3, currWord);
+          createCountDownInterval(
+            (timeDiff - 3) * 1000 + offsetTime,
+            3,
+            currWord
+          );
         }
       }
     }
 
     // scroll
-    if (currWord == currParent.childNodes[0] && currWord.innerText.trim() != "") {
+    if (
+      currWord == currParent.childNodes[0] &&
+      currWord.innerText.trim() != ""
+    ) {
       scrollLyric();
     }
   } else {
