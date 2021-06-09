@@ -250,23 +250,26 @@ function initAudio() {
   if (vol) myAudio.volume = vol;
   addAudioEvent();
 
+  let btnWrapper = createNewElement("div", null, "btn-wrapper");
+  audio_wrapper.appendChild(btnWrapper);
+
   btnPrev = createNewElement("button", "btn_prev", "Player__Button btn-prev", { "title": "Previous" });
   btnPrev.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" fill="currentColor"><path d="M4 4 H8 V14 L28 4 V28 L8 18 V28 H4 z "></path></svg>';
-  audio_wrapper.appendChild(btnPrev);
+  btnWrapper.appendChild(btnPrev);
   btnPrev.onclick = () => {
     prevSong();
   }
 
   btnNext = createNewElement("button", "btn_next", "Player__Button btn-next", { "title": "Next" });
   btnNext.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" fill="currentColor"><path d="M4 4 L24 14 V4 H28 V28 H24 V18 L4 28 z "></path></svg>';
-  audio_wrapper.appendChild(btnNext);
+  btnWrapper.appendChild(btnNext);
   btnNext.onclick = () => {
     nextSong();
   }
 
   btnPlayType = createNewElement("button", "btn_play_type", "Player__Button btn-play-type", { "title": "Sequence" });
   btnPlayType.innerHTML = BTN_SEQUENCE_SVG;
-  audio_wrapper.appendChild(btnPlayType);
+  btnWrapper.appendChild(btnPlayType);
   btnPlayType.onclick = () => {
     let newIndex;
     for (let i = 0; i < playTypeList.length; i++) {
