@@ -23,6 +23,7 @@ function clearPlayLyricInterval() {
  * @param {string} file Name of mp3 file
  */
 async function getLyric(file) {
+  setNoLyric();
   let lyricURL;
   let fileName = file.substr(0, file.length - 4); // remove ".mp3"
   let isFoundLyric = false;

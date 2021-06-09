@@ -111,7 +111,7 @@ function createSongTable(json) {
   // table headers
   trTag = createNewElement("tr");
   trTag.innerHTML = "<th style='text-align: right;'>STT</th>" +
-    "<th style='cursor: pointer;' onclick=\"showTable('title', 'ASC')\">Song</th>" +
+    "<th style='cursor: pointer;min-width: 220px;' onclick=\"showTable('title', 'ASC')\">Song</th>" +
     "<th style='cursor: pointer;' onclick=\"showTable('listens', 'DESC')\">Listens</th>" +
     "<th style='cursor: pointer;' onclick=\"showTable('type', 'ASC')\">Type</th>" +
     "<th style='cursor: pointer;' onclick=\"showTable('createdDate', 'DESC')\">Date</th>";
