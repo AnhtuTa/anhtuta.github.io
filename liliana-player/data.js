@@ -84,10 +84,13 @@ function createSongTable(json) {
   all_songs.innerHTML = "";
 
   /**************** search/filter ****************/
+  let searchWrapper = createNewElement("div", null, "search-wrapper");
+  all_songs.appendChild(searchWrapper);
+
   let allSongInputFilter = createNewElement("input", null, "input-text all-song-input", { "placeholder": "Search by title/artist" });
-  all_songs.appendChild(allSongInputFilter);
+  searchWrapper.appendChild(allSongInputFilter);
   let clearFilter = createNewElement("i", null, "fa fa-times btn-clear-filter", { "title": "Clear", "style": "display:none" });
-  all_songs.appendChild(clearFilter);
+  searchWrapper.appendChild(clearFilter);
   allSongInputFilter.addEventListener("keyup", function () {
     if (this.value === "") {
       clearFilter.style.display = "none";
@@ -105,12 +108,12 @@ function createSongTable(json) {
   /**************** table ****************/
   let cntSong = 1;
   let allSongValue = createNewElement("div", null, "all-song-value custom-scrollbar");
-  let tableTag = createNewElement("table", null, "table_striped", { id: "songTable" });
+  let tableTag = createNewElement("table", null, "table_striped", { id: "songTable", cellspacing: "0", cellpadding: "0" });
   let tdTag, trTag, aTag, iTag, imgTag, imgUrl;
 
   // table headers
   trTag = createNewElement("tr");
-  trTag.innerHTML = "<th style='text-align: right;'>STT</th>" +
+  trTag.innerHTML = "<th style='text-align: right;'>No.</th>" +
     "<th style='cursor: pointer;min-width: 220px;' onclick=\"showTable('title', 'ASC')\">Song</th>" +
     "<th style='cursor: pointer;' onclick=\"showTable('listens', 'DESC')\">Listens</th>" +
     "<th style='cursor: pointer;' onclick=\"showTable('type', 'ASC')\">Type</th>" +
@@ -126,7 +129,7 @@ function createSongTable(json) {
 
     // Second cell of each row
     imgUrl = json[i].imageUrl != null ? HOST_API + json[i].imageUrl : "music_icon.jpg";
-    tdTag = createNewElement("td");
+    tdTag = createNewElement("td", null, "td-song-info");
     imgTag = createNewElement("img", null, "song-album", { "src": imgUrl });
     tdTag.appendChild(imgTag);
     aTag = createNewElement("a", null, "song-item", { "href": "?file=" + json[i].fileName });

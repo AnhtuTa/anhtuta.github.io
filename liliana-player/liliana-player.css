@@ -297,9 +297,6 @@ body {
     /* scroll-behavior: smooth; */
     box-shadow: 3px 3px 20px 1px #888888;
 }
-.table_striped {
-    border-collapse: collapse;
-}
 .table_striped>tr:nth-of-type(odd) {
     background-color: #f9f9f9;
 }
@@ -313,7 +310,7 @@ body {
     text-align: right;
 }
 .table_striped>tr>th {
-    padding: 10px 5px;
+    padding: 5px 5px;
     text-align: left;
     color: #ffffff;
     background: #2199F9;
@@ -451,6 +448,10 @@ body {
     font-size: 13px;
     position: relative;
 }
+.td-song-info {
+    display: flex;
+    flex-direction: row;
+}
 .song-item:hover {
     text-decoration: none;
 }
@@ -468,10 +469,24 @@ body {
     font-size: 13px;
     margin-right: 24px;
 }
+.search-wrapper {
+    width: 40%;
+    position: relative;
+}
 .all-song-input {
     margin: 5px 0px;
     padding: 5px;
-    width: 40%;
+    width: 100%;
+}
+.btn-clear-filter {
+    position: absolute;
+    right: 6px;
+    top: 12px;
+    color: #c9c9c9;
+    cursor: pointer;
+}
+.btn-clear-filter:hover {
+    color: #838383;
 }
 #song_details {
     margin-top: 20px;
@@ -519,17 +534,6 @@ body {
 .btn-play-type {
     position: absolute;
     right: 0;
-}
-.btn-clear-filter {
-    position: relative;
-    left: -19px;
-    font-size: 20px;
-    top: 0px;
-    color: #c9c9c9;
-    cursor: pointer;
-}
-.btn-clear-filter:hover {
-    color: #838383;
 }
 .input-text {
     padding: .375rem .75rem;
@@ -610,6 +614,9 @@ cho màn hình width > 700px) */
     .btn-play-type {
         left: 76px;
         top: 0;
+    }
+    .search-wrapper {
+        width: 100%;
     }
 }
 
