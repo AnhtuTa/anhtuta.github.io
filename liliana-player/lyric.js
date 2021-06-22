@@ -104,23 +104,25 @@ function initLyric() {
 }
 
 function initTrcLyric() {
-  var temp, startLine, wordsInLine, startWord, endWord;
+  var temp, startLine, wordsInLine, startWord, endWord, divLine, rawLine, karaokeLine;
   for (var i = 0; i < words.length; i++) {
     temp = words[i].match(/\[\d+:\d+\.\d+\]/g); // ex: temp = ["[1:15.047]"]
     if (temp != null) {
       startLine = decodeTime(temp[0]); // ex: 75.047
       temp = words[i].substring(temp[0].length); // ex: <271>I <256>keep <790>saying <1254>no
       wordsInLine = temp.match(/<\d+>[^\<]*/g);
-      let divLine = createNewElement("div", null, "line");
+      divLine = createNewElement("div", null, "line");
+      rawLine = createNewElement("div", null, "raw-line");
+      karaokeLine = createNewElement("div", null, "karaoke-line");
 
       if (wordsInLine == null) {
-        console.log("Khi nào thì nó mới nhảy vào đây???");
+        console.log("Khi nào thì nó mới nhảy vào đây??? ", temp);
         let spanWord = createNewElement("span");
         spanWord.setAttribute("class", "not-pass-word");
         spanWord.innerText = temp;
         if (spanWord.innerText == "") spanWord.innerHTML = "&nbsp";
-        divLine.appendChild(spanWord);
-        div_result.appendChild(divLine);
+        karaokeLine.appendChild(spanWord);
+        div_result.appendChild(karaokeLine);
         continue;
       }
 
@@ -147,8 +149,12 @@ function initTrcLyric() {
 
         startWord = endWord;
         cntWord++;
-        divLine.appendChild(spanWord);
+        karaokeLine.appendChild(spanWord);
       }
+      rawLine.innerText = karaokeLine.innerText;
+      divLine.appendChild(rawLine);
+      // divLine.innerText = karaokeLine.innerText;
+      divLine.appendChild(karaokeLine);
       div_result.appendChild(divLine);
     } else {
       if (words[i].includes("offset:")) {
@@ -261,19 +267,17 @@ function updateLyric() {
 
   let prevWord, prevParent, currWord, currParent;
 
-  // PHẢI FIX XONG CÁI BUG NÀY!
-  //console.log(countdownInterval);
-
   if (currWordID >= 0) {
     let st = startTimes[currWordID] + offsetTime / 1000;
     let en = endTimes[currWordID] + offsetTime / 1000;
 
-    // ko dùng cái này để fix lỗi CHÚ Ý [1]
-    // (dùng cái này sẽ tối ưu hơn, tốt nhất là lyric KHÔNG NÊN sai)
-    if (st <= myAudio.currentTime && en >= myAudio.currentTime) return;
+    if (st <= myAudio.currentTime && en >= myAudio.currentTime) {
+      
+      return;
+    };
 
     prevWord = getById("word-" + currWordID);
-    prevParent = prevWord.parentNode;
+    prevParent = prevWord.parentNode.parentNode;
     if (isLrc) prevWord.classList.remove("word-active", "curr-word-lrc");
     else prevWord.classList.remove("word-active", "curr-word");
   }
@@ -282,7 +286,7 @@ function updateLyric() {
   //console.log(getById("word-" + currWordID).innerText);
   if (currWordID >= 0) {
     currWord = getById("word-" + currWordID);
-    currParent = currWord.parentNode;
+    currParent = currWord.parentNode.parentNode;
 
     if (isLrc) currWord.classList.add("word-active", "curr-word-lrc");
     else currWord.classList.add("word-active", "curr-word");
@@ -338,7 +342,7 @@ function updateLyric() {
 
     // scroll
     if (
-      currWord == currParent.childNodes[0] &&
+      //currWord == currParent.parentNode.childNodes[0] &&
       currWord.innerText.trim() != ""
     ) {
       scrollLyric();

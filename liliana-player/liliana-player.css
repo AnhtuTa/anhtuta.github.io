@@ -23,11 +23,10 @@ body {
     /* transition: 0s !important; */
 }
 .line {
-    margin: 5px 0;
-    padding: 0 10px;
+    margin: 5px;
 }
 .line-active {
-    margin: 10px 0 !important;
+    /* margin: 10px 0 !important; */
     transition: 0.1s;
     /* ko dùng nữa vì chữ bị nhảy xuống dòng khi active line */
     /* font-size: 1.2em; */
@@ -56,7 +55,7 @@ body {
 .div-res-dark .line-active {
     color: #fff;
     /* background: #4c4c4c; */
-    font-weight: bold;
+    /* font-weight: bold; */
 }
 .word-appear .line-active {
     color: #41BDFF !important;
@@ -69,7 +68,7 @@ body {
 .div-res-light .line-active {
     color: #575757;
     /* background: #e8e8e8; */
-    font-weight: bold;
+    /* font-weight: bold; */
 }
 
 /* AlbumBg theme */
@@ -79,7 +78,7 @@ body {
 .div-res-album-bg .line-active {
     color: #fff;
     /* background: #4c4c4c69; */
-    font-weight: bold;
+    /* font-weight: bold; */
 }
 
 .btn_sync_wrapper {
@@ -247,15 +246,15 @@ body {
 }
 
 .div-res-dark .curr-word {
-    font-weight: bold;
+    /* font-weight: bold; */
     text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
 }
 .div-res-light .curr-word {
-    font-weight: bold;
+    /* font-weight: bold; */
     text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
 }
 .div-res-album-bg .curr-word {
-    font-weight: bold;
+    /* font-weight: bold; */
     text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
 }
 /* style này ở dưới bọn .curr-word ở trên, do đó sẽ ghi đè text-shadow */
@@ -559,6 +558,18 @@ body {
     float: left;
     margin-right: 5px;
     border-radius: 3px;
+}
+
+/***** Karaoke effect *****/
+.karaoke-mode .line {
+    position: relative;
+}
+.karaoke-mode .line .karaoke-line {
+    position: absolute;
+    top: 0;
+    color: #41BDFF;
+    /* text-shadow: -1px -1px 0 #41bdff, 1px -1px 0 #41bdff, -1px 1px 0 #41bdff, 1px 1px 0 #41bdff; */
+    /* text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff; */
 }
 
 /* Chú ý: các style sau PHẢI được định nghĩa ở trên rồi (áp dụng

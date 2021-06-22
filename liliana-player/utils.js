@@ -245,7 +245,7 @@ function getCurrentWordByTime(sec) {
 
 function scrollLyric(currWord = null) {
   if (currWord == null) {
-    currWord = getById("word-" + currWordID);
+    currWord = getById("word-" + currWordID).parentNode.parentNode;
   }
   if (currWord != null) div_result.scrollTop = currWord.offsetTop - getById("word-0").offsetTop - div_result.offsetHeight / 2 + 50;
 }
