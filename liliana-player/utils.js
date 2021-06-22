@@ -114,6 +114,9 @@ function createNewElement(tagName, id, classList, attributes = null) {
   return ele;
 }
 
+/**
+ * Not use!
+ */
 function sortTable(tableId, n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   table = document.getElementById(tableId);

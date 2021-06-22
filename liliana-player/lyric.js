@@ -39,18 +39,14 @@ async function getLyric(file) {
     if (i > 1) isLrc = true;
     else isLrc = false;
 
-    try {
-      const lyric = await $.ajax({
-        url: lyricURL,
-      });
+    const lyric = await $.ajax({
+      url: lyricURL,
+    });
+    if (lyric !== "Lyric doesn't exist!") {
       saveLyric(lyric);
       lyricFile = lyricURL.substring(lyricURL.indexOf("?file=") + 6);
       isFoundLyric = true;
       break;
-    } catch (err) {
-      // When there is no lyric (API return 404), it will go here.
-      // We do nothing because we will call every API to get lyric
-      // console.log("Error: ", JSON.parse(err.responseText));
     }
   }
 

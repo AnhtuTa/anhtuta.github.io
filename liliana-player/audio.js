@@ -128,7 +128,7 @@ function playSong(isClicked = false) {
       select_mp3_from_local.parentElement.removeChild(select_mp3_from_local);
     }
 
-    let songURL = HOST_API + "/api/song?file=" + file;
+    let songURL = HOST_API + "/api/song/file?file=" + file;
 
     if (myAudio === null || myAudio === undefined) {
       initAudio();
