@@ -331,7 +331,7 @@ function getFormattedPassTime(milisec) {
 
     if(second%1 === 0) second = second + ".000";
 
-    return "[" + minute + ":" + second + "]";
+    return "[" + (minute < 10 ? "0" + minute : minute) + ":" + second + "]"; // ex: [01:59.056]
 }
 
 function showLoading() {
