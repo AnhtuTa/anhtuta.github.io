@@ -314,7 +314,7 @@ function addBiggerWord(nextWord) {
 }
 
 /**
- * Trả về thời gian theo format [minute:second.milisecond]
+ * Trả về thời gian theo format [minute:second.millisecond], ex: [01:59.056]
  * @param {long} milisec: thời gian cần format
  **/
 function getFormattedPassTime(milisec) {
@@ -328,16 +328,12 @@ function getFormattedPassTime(milisec) {
     // Cách đơn giản mà đúng: getFormattedPassTime(119056) = [1:59.056]
     var minute = Math.floor(milisec/60000);  // 1 minute = 60000 ms
     var second = (milisec - minute*60000)/1000;   //1 second = 1000 ms
+    var fractionStr = second - Math.floor(second) === 0 ? '.000' : '';
 
-    if(second%1 === 0) second = second + ".000";
-
-    return (
-      "[" +
-      (minute < 10 ? "0" + minute : minute) +
-      ":" +
-      (second < 10 ? "0" + second : second) +
-      "]"
-    ); // ex: [01:59.056]
+    return "[" +
+      (minute < 10 ? "0" + minute : minute) + ":" +
+      (second < 10 ? "0" + second : second) + fractionStr +
+      "]";
 }
 
 function showLoading() {
