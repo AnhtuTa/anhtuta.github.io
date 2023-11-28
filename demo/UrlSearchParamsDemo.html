@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>URLSearchParams demo</title>
+  </head>
+  <body>
+    <div>URL:</div>
+    <div id="url">
+      https://tmnmy.test-app.link/cLAbITWu1Ab?session_id=6df1e16b-a17b-493d-abcb-857d324e4fc8&transaction_id=01230926102107274R6507655&payment_code=00020101021230200007default0105103385204000053034585406200.005802MY5922Online%20Payment%20Test%20176013Petaling%20Jaya6229052501230926102107274R6507655630445AA&created_datetime=2023-09-26T10%3A21%3A07Z&expire_in=15&$deep_link=truemoneycx%3A%2F%2Fonline-payment%3Fpayment_code%3D00020101021230200007default0105103385204000053034585406200.005802MY5922Online%20Payment%20Test%20176013Petaling%20Jaya6229052501230926102107274R6507655630445AA%26return_url%3Dhttps%3A%2F%2Fmerchant.link.com%2Fsomething%2Fhere
+    </div>
+    <div>Params:</div>
+    <div id="res"></div>
+  </body>
+  <script>
+    const url = document.getElementById("url").innerText.trim();
+    const params = new URLSearchParams(url.slice(url.indexOf("?") + 1));
+    for (param of params) {
+      console.log(param);
+    }
+    for (key of params.keys()) {
+      console.log(key, params.get(key));
+    }
+    console.log("session_id = " + params.get("session_id"));
+  </script>
+</html>

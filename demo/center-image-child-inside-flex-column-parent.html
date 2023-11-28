@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Center image child inside flex column parent</title>
+    <style>
+      * {
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .parent {
+        border: 2px solid green;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+      }
+      img {
+        width: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>This is not center</h3>
+    <div class="parent">
+      <img
+        src="https://avatars.githubusercontent.com/u/26838239"
+        alt="My Github Avatar"
+      />
+      <div style="padding: 10px; border: 2px solid blueviolet">Another row</div>
+    </div>
+
+    <h3>
+      Wrap thẻ img trong 1 thẻ div. Tại sao lại có 1 khoảng trống giữa 2 row
+      nhỉ???
+    </h3>
+    <div class="parent">
+      <div>
+        <img
+          src="https://avatars.githubusercontent.com/u/26838239"
+          alt="My Github Avatar"
+        />
+      </div>
+      <div style="padding: 10px; border: 2px solid blueviolet">Another row</div>
+    </div>
+
+    <h3>Set margin auto cho thẻ img</h3>
+    <div class="parent">
+      <img
+        src="https://avatars.githubusercontent.com/u/26838239"
+        alt="My Github Avatar"
+        style="margin: auto"
+      />
+      <div style="padding: 10px; border: 2px solid blueviolet">Another row</div>
+    </div>
+  </body>
+</html>

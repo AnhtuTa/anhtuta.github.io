@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Confirm before leaving this page</title>
+  </head>
+  <body>
+    <!-- this will ask for confirmation: -->
+    <a href="http://google.com">external link</a><br />
+
+    <!-- this will go without asking: -->
+    <a href="anotherPage.html" onClick="unhook()">internal link (un-hooked)</a>
+  </body>
+  <script type="text/javascript">
+    var hook = true;
+    window.onbeforeunload = function () {
+      if (hook) {
+        return "Did you save your stuff?";
+      }
+    };
+    function unhook() {
+      hook = false;
+    }
+  </script>
+</html>
