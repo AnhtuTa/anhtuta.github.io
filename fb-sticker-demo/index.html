@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FB sticker animation using CSS</title>
+    <style>
+      .fb-sticker-container {
+        width: 80px;
+        height: 80px;
+        position: relative;
+        overflow: hidden;
+      }
+      .fb-sticker-content {
+        /* Use this to optimize: only show animation when user hover to sticker, otherwise use this line */
+        /* animation: auto ease 0s 1 normal none running none; */
+        animation-iteration-count: infinite;
+        animation-timing-function: steps(1); /* most important style */
+      }
+      .fb-sticker-cry {
+        width: 500%;
+        height: 500%;
+        animation-duration: 2400ms;
+        animation-name: __DYNAMIC__CometAnimatedSprite_24_5_5;
+      }
+      .fb-sticker-nod {
+        width: 300%;
+        height: 300%;
+        animation-duration: 1000ms;
+        animation-name: __DYNAMIC__CometAnimatedSprite_8_3_3;
+      }
+      .fb-sticker-cool {
+        width: 400%;
+        height: 300%;
+        animation-duration: 1000ms;
+        animation-name: __DYNAMIC__CometAnimatedSprite_12_3_4;
+      }
+      @keyframes __DYNAMIC__CometAnimatedSprite_24_5_5 {
+        0% {
+          transform: translate(0%, 0%);
+        }
+
+        4.16667% {
+          transform: translate(-20%, 0%);
+        }
+
+        8.33333% {
+          transform: translate(-40%, 0%);
+        }
+
+        12.5% {
+          transform: translate(-60%, 0%);
+        }
+
+        16.6667% {
+          transform: translate(-80%, 0%);
+        }
+
+        20.8333% {
+          transform: translate(0%, -20%);
+        }
+
+        25% {
+          transform: translate(-20%, -20%);
+        }
+
+        29.1667% {
+          transform: translate(-40%, -20%);
+        }
+
+        33.3333% {
+          transform: translate(-60%, -20%);
+        }
+
+        37.5% {
+          transform: translate(-80%, -20%);
+        }
+
+        41.6667% {
+          transform: translate(0%, -40%);
+        }
+
+        45.8333% {
+          transform: translate(-20%, -40%);
+        }
+
+        50% {
+          transform: translate(-40%, -40%);
+        }
+
+        54.1667% {
+          transform: translate(-60%, -40%);
+        }
+
+        58.3333% {
+          transform: translate(-80%, -40%);
+        }
+
+        62.5% {
+          transform: translate(0%, -60%);
+        }
+
+        66.6667% {
+          transform: translate(-20%, -60%);
+        }
+
+        70.8333% {
+          transform: translate(-40%, -60%);
+        }
+
+        75% {
+          transform: translate(-60%, -60%);
+        }
+
+        79.1667% {
+          transform: translate(-80%, -60%);
+        }
+
+        83.3333% {
+          transform: translate(0%, -80%);
+        }
+
+        87.5% {
+          transform: translate(-20%, -80%);
+        }
+
+        91.6667% {
+          transform: translate(-40%, -80%);
+        }
+
+        95.8333% {
+          transform: translate(-60%, -80%);
+        }
+      }
+      @keyframes __DYNAMIC__CometAnimatedSprite_8_3_3 {
+        0% {
+          transform: translate(0%, 0%);
+        }
+
+        12.5% {
+          transform: translate(-33.3333%, 0%);
+        }
+
+        25% {
+          transform: translate(-66.6667%, 0%);
+        }
+
+        37.5% {
+          transform: translate(0%, -33.3333%);
+        }
+
+        50% {
+          transform: translate(-33.3333%, -33.3333%);
+        }
+
+        62.5% {
+          transform: translate(-66.6667%, -33.3333%);
+        }
+
+        75% {
+          transform: translate(0%, -66.6667%);
+        }
+
+        87.5% {
+          transform: translate(-33.3333%, -66.6667%);
+        }
+      }
+      @keyframes __DYNAMIC__CometAnimatedSprite_12_3_4 {
+        0% {
+          transform: translate(0%, 0%);
+        }
+
+        8.33333% {
+          transform: translate(-25%, 0%);
+        }
+
+        16.6667% {
+          transform: translate(-50%, 0%);
+        }
+
+        25% {
+          transform: translate(-75%, 0%);
+        }
+
+        33.3333% {
+          transform: translate(0%, -33.3333%);
+        }
+
+        41.6667% {
+          transform: translate(-25%, -33.3333%);
+        }
+
+        50% {
+          transform: translate(-50%, -33.3333%);
+        }
+
+        58.3333% {
+          transform: translate(-75%, -33.3333%);
+        }
+
+        66.6667% {
+          transform: translate(0%, -66.6667%);
+        }
+
+        75% {
+          transform: translate(-25%, -66.6667%);
+        }
+
+        83.3333% {
+          transform: translate(-50%, -66.6667%);
+        }
+
+        91.6667% {
+          transform: translate(-75%, -66.6667%);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="fb-sticker-container">
+      <img
+        class="fb-sticker-content fb-sticker-cry"
+        src="fb-sticker-cry.png"
+        alt="fb-sticker"
+      />
+    </div>
+    <div class="fb-sticker-container">
+      <img
+        class="fb-sticker-content fb-sticker-nod"
+        src="fb-sticker-nod.png"
+        alt="fb-sticker"
+      />
+    </div>
+    <div class="fb-sticker-container">
+      <img
+        class="fb-sticker-content fb-sticker-cool"
+        src="fb-sticker-cool.png"
+        alt="fb-sticker"
+      />
+    </div>
+  </body>
+</html>
