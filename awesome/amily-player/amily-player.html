@@ -48,7 +48,7 @@ gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);useEffect(effectLib.finalComp,
   </div>
 </div>
 <div class="content-bottom">
-  <div id="songList" style="display: none" class="custom-scrollbar"></div>
+  <div id="songList" class="custom-scrollbar"></div>
   <button title="Song list" class="btn-toggle-list">
       <svg fill="currentColor" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
           <path d="M19.5 16h-15c-0.276 0-0.5-0.224-0.5-0.5s0.224-0.5 0.5-0.5h15c0.276 0 0.5 0.224 0.5 0.5s-0.224 0.5-0.5 0.5z"></path>
@@ -356,7 +356,8 @@ var btnPlay = document.getElementsByClassName('btn-play')[0];
 var btnNext = document.getElementsByClassName('btn-next')[0];
 var audioTime = document.getElementById('audioTime');
 // var BASE_URL = "http://107.113.192.104:9005/liliana-player"; // SVMC
-var BASE_URL = "http://localhost:9005/liliana-player";  // local
+// var BASE_URL = "http://localhost:9005/liliana-player";  // local
+var BASE_URL = "https://blog.nenmongvietnam.com/laravel/public";  // production
 var myvids = [{
   "id" : 1,
   "title" : "Title",
@@ -364,7 +365,7 @@ var myvids = [{
   "album" : "Album",
   "type" : "Type",
   "listens" : 0,
-  "fileName" : "audio.mp3",
+  "file_name" : "audio.mp3",
   "imageUrl" : null,
   "createdDate" : "2019-12-30T16:37:03.000+0000",
   "formatCreatedDate" : "20191230",
@@ -378,7 +379,7 @@ var isShuffle = false;
 btnShuffle.innerHTML = btnSequenceSvg;
 
 // Remove this if you want :)
-myvid.volume = 0.3;
+// myvid.volume = 0.3;
 
 function createNewElement(tagName, id, classList, attributes=null) {
     let ele = document.createElement(tagName);
@@ -403,10 +404,12 @@ function loadSong() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            myvids = JSON.parse(this.responseText).map((song) => {
+            myvids = JSON.parse(this.responseText)
+            .filter(song => !!song.file_name && !song.zing_id)
+            .map((song) => {
                 return {
                     ...song,
-                    streamUrl: BASE_URL + "/api/song?file=" + song.fileName
+                    streamUrl: BASE_URL + "/api/song/file?file=" + song.file_name
                 }
             });
             updateContents(activeVideo, false);
