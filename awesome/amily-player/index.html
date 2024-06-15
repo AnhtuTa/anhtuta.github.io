@@ -405,6 +405,7 @@ function loadSong() {
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             myvids = JSON.parse(this.responseText)
+            // Only use songs that have local mp3 file, not use song that is sourced from zing mp3
             .filter(song => !!song.file_name && !song.zing_id)
             .map((song) => {
                 return {
