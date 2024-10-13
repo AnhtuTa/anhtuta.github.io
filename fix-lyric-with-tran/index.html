@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fix lyric file with translation (.xlrc)</title>
+  </head>
+  <body>
+    <div>
+      <h2>Tutorial</h2>
+      <ol>
+        <li>
+          Use your chinese lyric file (.lrc), add pinyin for it lyric here (note: should not copy metadata tag in your lyric file):
+          <a
+            href="https://www.chineseconverter.com/en/convert/chinese-to-pinyin"
+            target="_blank"
+          >
+            https://www.chineseconverter.com/en/convert/chinese-to-pinyin
+          </a>
+        </li>
+        <li>Copy the result to the textarea below</li>
+        <li>Click on the Fix button</li>
+        <li>Click on the Copy button to copy the fixed lyric</li>
+      </ol>
+    </div>
+    <textarea name="lyric" id="lyric" cols="30" rows="10" placeholder="[00:42.37]今日乱我心
+[00:42.37] jīn rì luàn wǒ xīn
+[00:44.32]多烦忧
+[00:44.32] duō fán yōu
+[00:46.46]
+[00:46.46]"></textarea
+    >
+    <div>
+      <button id="fix">Fix</button>
+      <button id="copy">Copy</button>
+    </div>
+    <div id="result"></div>
+  </body>
+  <script>
+    /*
+    Explain logic here for Copilot to understand and generate code :v:
+    lyric file will look like this:
+    [00:42.37]今日乱我心
+    [00:42.37] jīn rì luàn wǒ xīn
+    [00:44.32]多烦忧
+    [00:44.32] duō fán yōu
+    [00:46.46]
+    [00:46.46]
+    Each chinese sentence will have a corresponding english translation in the next line. Our tasks are to:
+    1. Read each line, use regex to extract it to 2 parts, first one is lineTime, and next one is lineText.
+    E.g: lineTime = '[00:42.37]', lineText = '今日乱我心'
+    2. Compare lineTime with the previous lineTime. If both lineTime are the same and lineText is NOT empty,
+    replace this lineTime by '[tran1]'. If both lineTime are the same and lineText is empty, remove this line.
+    Result will look like this:
+    [00:42.37]今日乱我心
+    [tran1]jīn rì luàn wǒ xīn
+    [00:44.32]多烦忧
+    [tran1]duō fán yōu
+    [00:46.46]
+    */
+    document.getElementById("fix").addEventListener("click", function () {
+      var lyric = document.getElementById("lyric").value;
+      var result = document.getElementById("result");
+      var lines = lyric.split("\n");
+      var prevLineTime = "";
+      var fixedLyric = "";
+      for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
+        var lineTimeRegex = line.match(/\[.*\]/g); // this array will contain only 1 element
+        var lineTime = lineTimeRegex ? lineTimeRegex[0] : "";
+        var lineText = line.replace(lineTime, "").trim();
+
+        if (lineTime === prevLineTime && lineText !== "") {
+          fixedLyric += "[tran1]" + lineText + "\n";
+        } else if (lineTime === prevLineTime && lineText === "") {
+          // do nothing
+        } else {
+          fixedLyric += line + "\n";
+          prevLineTime = "";
+        }
+
+        prevLineTime = lineTime;
+      }
+      result.innerText = fixedLyric;
+    });
+
+    document.getElementById("copy").addEventListener("click", function () {
+      var result = document.getElementById("result");
+      var range = document.createRange();
+      range.selectNode(result);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+      document.execCommand("copy");
+      window.getSelection().removeAllRanges();
+    });
+  </script>
+</html>
